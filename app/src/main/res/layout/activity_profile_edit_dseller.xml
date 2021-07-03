@@ -18,7 +18,6 @@
             android:src="@drawable/ic_baseline_chevron_left_24"
             android:layout_height="30dp"
             android:background="@null">
-
         </ImageButton>
 
 
@@ -32,8 +31,9 @@
             android:layout_height="wrap_content"
             android:text="Edit Seller Profile" />
 
+
         <ImageButton
-            android:id="@+id/btnlogout"
+            android:id="@+id/btngps"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@null"

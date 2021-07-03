@@ -71,7 +71,7 @@ private ImageButton btnLogout,btnEdit;
         btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainUserActivity.this,ProfileEditDSellerActivity.class);
+                Intent intent=new Intent(MainUserActivity.this,ProfileEditUserActivity.class);
                 startActivity(intent);
                 finish();
             }

@@ -26,8 +26,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 
 public class MainSellerActivity extends AppCompatActivity {
-private TextView tvName;
-private ImageButton btnLogout,btnedit;
+private TextView tvName,tvShopName,tvEmail;
+private ImageButton btnLogout,btnedit,btnaddProduct;
+private ImageView imageView;
+
 
 private FirebaseAuth firebaseAuth;
 private ProgressDialog progressDialog;
@@ -38,8 +40,12 @@ private ProgressDialog progressDialog;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_seller);
         tvName=findViewById(R.id.tvName);
+        tvShopName=findViewById(R.id.tvShopName);
+        tvEmail=findViewById(R.id.tvEmail);
+        btnaddProduct=findViewById(R.id.btnaddProduct);
+        imageView=findViewById(R.id.profileIv);
         btnLogout=findViewById(R.id.btnlogout);
-        btnedit=findViewById(R.id.btnEditProfile);
+        btnedit=findViewById(R.id.btnEditProfilee);
 
         progressDialog=new ProgressDialog(this);
         progressDialog.setTitle("Please wait...");
@@ -61,7 +67,14 @@ private ProgressDialog progressDialog;
             public void onClick(View v) {
                 Intent intent=new Intent(MainSellerActivity.this,ProfileEditDSellerActivity.class);
                 startActivity(intent);
-                finish();
+            }
+        });
+
+        btnaddProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainSellerActivity.this,AddProductActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -113,8 +126,11 @@ private ProgressDialog progressDialog;
                         for(DataSnapshot s: snapshot.getChildren()){
                             String name=""+s.child("name").getValue();
                             String accountType=""+s.child("accountType").getValue();
-
+                            String email=""+s.child("email").getValue();
+                            String shopName=""+s.child("shopName").getValue();
                             tvName.setText(name+"("+accountType+")");
+                            tvShopName.setText(shopName);
+                            tvEmail.setText(email);
 
 
                         }

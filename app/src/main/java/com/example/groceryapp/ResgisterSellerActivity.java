@@ -354,9 +354,11 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);
 
+
         // pass the constant to compare it
         // with the returned requestCode
         startActivityForResult(Intent.createChooser(i, "Select Picture"), IMAGE_PICK_GALLERY_CODE);
+
     }
 
     //camera

@@ -7,21 +7,9 @@
     tools:context=".MainSellerActivity">
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="100dp"
         android:padding="10dp"
         android:background="@drawable/shape_rect01">
-
-
-
-        <TextView
-            android:id="@+id/tvName"
-            android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name" />
 
         <ImageButton
             android:id="@+id/btnlogout"
@@ -32,12 +20,56 @@
             android:src="@drawable/ic_baseline_power_settings_new_24" />
 
         <ImageButton
-            android:id="@+id/btnEditProfile"
+            android:id="@+id/btnEditProfilee"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@null"
             android:layout_toStartOf="@id/btnlogout"
-
             android:src="@drawable/ic_baseline_edit_24" />
+
+        <ImageButton
+            android:id="@+id/btnaddProduct"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@null"
+            android:layout_toStartOf="@id/btnEditProfilee"
+            android:src="@drawable/ic_baseline_add_shopping_cart_24" />
+        <com.blogspot.atifsoftwares.circularimageview.CircularImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/profileIv"
+            app:c_border="true"
+            app:c_background_color="@color/white"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_baseline_person_pin_24"
+            ></com.blogspot.atifsoftwares.circularimageview.CircularImageView>
+        <TextView
+            android:id="@+id/tvName"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_toEndOf="@id/profileIv"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name" />
+
+        <TextView
+            android:id="@+id/tvShopName"
+            android:layout_toEndOf="@id/profileIv"
+            android:layout_below="@+id/tvName"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Shop Name" />
+
+        <TextView
+            android:id="@+id/tvEmail"
+            android:layout_toEndOf="@id/profileIv"
+            android:layout_below="@+id/tvShopName"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email" />
+
     </RelativeLayout>
 </RelativeLayout>

@@ -53,7 +53,8 @@ private FirebaseAuth firebaseAuth;
                     public void onDataChange( DataSnapshot snapshot) {
                         for(DataSnapshot s:snapshot.getChildren()){
                             String accountType=""+s.child("accountType").getValue();
-                            if(accountType.equals("Seller")){
+                            String sp=accountType.trim();
+                            if(sp.equals("Seller")){
                                 Intent intent=new Intent(SplashActivity.this,MainSellerActivity.class);
                                 startActivity(intent);
                                 finish();
