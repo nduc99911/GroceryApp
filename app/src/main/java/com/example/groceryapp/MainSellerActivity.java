@@ -27,7 +27,7 @@ import java.util.HashMap;
 
 public class MainSellerActivity extends AppCompatActivity {
 private TextView tvName;
-private ImageButton btnLogout;
+private ImageButton btnLogout,btnedit;
 
 private FirebaseAuth firebaseAuth;
 private ProgressDialog progressDialog;
@@ -39,8 +39,8 @@ private ProgressDialog progressDialog;
         setContentView(R.layout.activity_main_seller);
         tvName=findViewById(R.id.tvName);
         btnLogout=findViewById(R.id.btnlogout);
+        btnedit=findViewById(R.id.btnEditProfile);
 
-        Context context;
         progressDialog=new ProgressDialog(this);
         progressDialog.setTitle("Please wait...");
         progressDialog.setCanceledOnTouchOutside(false);
@@ -52,6 +52,16 @@ private ProgressDialog progressDialog;
             public void onClick(View v) {
                 makeOfflie();
 
+            }
+        });
+
+        //edit profile
+        btnedit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainSellerActivity.this,ProfileEditDSellerActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }

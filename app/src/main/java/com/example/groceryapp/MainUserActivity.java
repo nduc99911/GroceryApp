@@ -24,7 +24,7 @@ import java.util.HashMap;
 
 public class MainUserActivity extends AppCompatActivity {
 private TextView tvName;
-private ImageButton btnLogout;
+private ImageButton btnLogout,btnEdit;
 
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
@@ -34,6 +34,7 @@ private ImageButton btnLogout;
         setContentView(R.layout.activity_main_user);
         tvName=findViewById(R.id.tvName);
         btnLogout=findViewById(R.id.btnlogout);
+        btnEdit=findViewById(R.id.btnEditProfile);
 
         firebaseAuth=FirebaseAuth.getInstance();
         checkUser();
@@ -63,6 +64,16 @@ private ImageButton btnLogout;
                         });
                 firebaseAuth.signOut();
                 checkUser();
+            }
+        });
+
+        //edit profile
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainUserActivity.this,ProfileEditDSellerActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
