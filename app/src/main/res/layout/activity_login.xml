@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:padding="10dp"
+        android:background="@drawable/shape_rect01">
+
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_centerHorizontal="true"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Login" />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/iconIv"
+        android:layout_width="40dp"
+        android:padding="5dp"
+        android:background="@drawable/shape_circle01"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_baseline_vpn_key_24"
+        android:layout_marginTop="60dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="40dp"/>
+
+    <EditText
+        android:id="@+id/edEmail"
+        android:layout_below="@+id/iconIv"
+        android:hint="Email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:padding="10dp"
+        android:inputType="textEmailAddress"
+        android:drawablePadding="5dp"
+        android:drawableStart="@drawable/ic_baseline_mail_outline_24"
+        android:background="@drawable/shape_recy02"
+        />
+
+    <EditText
+        android:id="@+id/edPassword"
+        android:layout_below="@+id/edEmail"
+        android:hint="Password"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:padding="10dp"
+        android:inputType="textPassword"
+        android:drawablePadding="5dp"
+        android:drawableStart="@drawable/ic_baseline_vpn_key_24"
+        android:background="@drawable/shape_recy02"
+        />
+
+    <TextView
+        android:id="@+id/forgotTv"
+        android:layout_margin="5dp"
+        android:layout_below="@id/edPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:text="Forgot Pasword" />
+
+    <Button
+        android:id="@+id/loginBtn"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:minWidth="120dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/forgotTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login" />
+
+    <TextView
+        android:id="@+id/noAccountTv"
+        android:layout_margin="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:text="No have account ? Register" />
+</RelativeLayout>
