@@ -37,8 +37,14 @@ import android.widget.Toast;
 import com.blogspot.atifsoftwares.circularimageview.CircularImageView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 import java.util.List;
@@ -109,7 +115,7 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
         firebaseAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
-        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCanceledOnTouchOutside(true);
 
         //initr permission array
         locationPermisson = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
@@ -194,10 +200,7 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
             Toast.makeText(this, "password must be 6 charaters long ...", Toast.LENGTH_LONG).show();
             return;
         }
-        if (password.equals(cofirmPassword)) {
-            Toast.makeText(this, "Password doesn't match ...", Toast.LENGTH_LONG).show();
-            return;
-        }
+
 
         createAcount();
 
@@ -245,9 +248,101 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
             hashMap.put("state", "" + state);
             hashMap.put("city", "" + city);
             hashMap.put("address", "" + address);
-            hashMap.put("country", "" + country);
-        } else {
+            hashMap.put("latitude", "" + latidute);
+            hashMap.put("longitude", "" + longitude);
+            hashMap.put("timestamp", "" + timestamp);
+            hashMap.put("accountType", "Seller" );
+            hashMap.put("online", "true");
+            hashMap.put("shopOpen", "true");
+            hashMap.put("profileImage", "");
+            //save to db
+            DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users");
+            reference.child(firebaseAuth.getUid()).setValue(hashMap)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            //db update
+                            progressDialog.dismiss();
+                            Intent intent=new Intent(ResgisterSellerActivity.this,MainSellerActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure( Exception e) {
+                        //fail update db
+                    progressDialog.dismiss();
+                    Intent intent=new Intent(ResgisterSellerActivity.this,MainSellerActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
 
+        } else {
+                //save info with image
+            String filePathAndName="profile_image/"+""+firebaseAuth.getUid();
+            //upload image
+            StorageReference storageReference=FirebaseStorage.getInstance().getReference(filePathAndName);
+            storageReference.putFile(imageUri)
+            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    //get url of upload image
+                    Task<Uri> uriTask=taskSnapshot.getStorage().getDownloadUrl();
+                    while(!uriTask.isSuccessful()){
+                        Uri uri=uriTask.getResult();
+                        if(uriTask.isSuccessful()){
+                            //setdata to save
+                            HashMap<String, Object> hashMap = new HashMap<>();
+                            hashMap.put("uid", "" + firebaseAuth.getUid());
+                            hashMap.put("email", "" + email);
+                            hashMap.put("name", "" + fullName);
+                            hashMap.put("shopName", "" + shopName);
+                            hashMap.put("phone", "" + phoneNumber);
+                            hashMap.put("deliveryFee", "" + deliveryFee);
+                            hashMap.put("country", "" + country);
+                            hashMap.put("state", "" + state);
+                            hashMap.put("city", "" + city);
+                            hashMap.put("address", "" + address);
+                            hashMap.put("latitude", "" + latidute);
+                            hashMap.put("longitude", "" + longitude);
+                            hashMap.put("timestamp", "" + timestamp);
+                            hashMap.put("accountType", "Seller" );
+                            hashMap.put("online", "true");
+                            hashMap.put("shopOpen", "true");
+                            hashMap.put("profileImage", ""+uri);//url of uploades image
+                            //save to db
+                            DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users");
+                            reference.child(firebaseAuth.getUid()).setValue(hashMap)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            //db update
+                            progressDialog.dismiss();
+                            Intent intent=new Intent(ResgisterSellerActivity.this,MainSellerActivity.class);
+                            startActivity(intent);
+                            finish();
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure( Exception e) {
+                                    //fail update db
+                                    progressDialog.dismiss();
+                                    Intent intent=new Intent(ResgisterSellerActivity.this,MainSellerActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+                        }
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure( Exception e) {
+                        progressDialog.dismiss();
+                        Toast.makeText(ResgisterSellerActivity.this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
@@ -297,9 +392,13 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
     }
 
     private void pickFromGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, IMAGE_PICK_GALLERY_CODE);
+        Intent i = new Intent();
+        i.setType("image/*");
+        i.setAction(Intent.ACTION_GET_CONTENT);
+
+        // pass the constant to compare it
+        // with the returned requestCode
+        startActivityForResult(Intent.createChooser(i, "Select Picture"),200);
     }
 
     private void pickFromCamera() {
@@ -544,10 +643,10 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
             // SELECT_PICTURE constant
             if (requestCode == IMAGE_PICK_GALLERY_CODE) {
                 // Get the url of the image from data
-                Uri selectedImageUri = data.getData();
-                if (null != selectedImageUri) {
+                imageUri = data.getData();
+                if (null != imageUri) {
                     // update the preview image in the layout
-                    profile.setImageURI(selectedImageUri);
+                    profile.setImageURI(imageUri);
                 }
             }
         }
