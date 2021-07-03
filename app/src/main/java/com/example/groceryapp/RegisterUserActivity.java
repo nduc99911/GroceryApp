@@ -21,6 +21,7 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -65,6 +66,18 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_user);
+
+//
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getApplicationContext(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+        }
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationEnabled();
+        getLocation();
+        //
 
         imgback=findViewById(R.id.btnback);
         profile=findViewById(R.id.Improfile);
@@ -134,8 +147,46 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         });
     }
     //
+    private void locationEnabled() {
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (!gps_enabled && !network_enabled) {
+            new AlertDialog.Builder(RegisterUserActivity.this)
+                    .setTitle("Enable GPS Service")
+                    .setMessage("We need your GPS location to show Near Places around you.")
+                    .setCancelable(false)
+                    .setPositiveButton("Enable", new
+                            DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                                }
+                            })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        }
+    }
 
-
+    void getLocation() {
+        try {
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 500, 5, (LocationListener) this);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+//
     void imageChooser() {
 
         // create an instance of the
@@ -282,12 +333,26 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         ActivityCompat.requestPermissions(this,storagePermisson,CAMERA_REQUEST_CODE);
     }
     //
+
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        latidute=location.getLatitude();
-        longitude=location.getLongitude();
+        try {
+            Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 
-        finAddress();
+            String address=addresses.get(0).getAddressLine(0);//complete addres
+            String city=addresses.get(0).getLocality();
+            String state=addresses.get(0).getAdminArea();
+            String country=addresses.get(0).getCountryName();
+
+            //set address
+            edCity.setText(city);
+            edState.setText(state);
+            edCountry.setText(country);
+            edAddress.setText(address);
+
+        } catch (Exception e) {
+        }
 
     }
 

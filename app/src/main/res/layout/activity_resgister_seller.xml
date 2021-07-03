@@ -182,7 +182,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
             android:padding="10dp"
-            android:inputType="textPassword"
+            android:inputType="textPersonName"
             android:drawablePadding="5dp"
             android:drawableStart="@drawable/ic_baseline_vpn_key_24"
             android:background="@drawable/shape_recy02"

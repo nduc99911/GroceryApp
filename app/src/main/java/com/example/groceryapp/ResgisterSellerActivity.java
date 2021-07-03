@@ -23,6 +23,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
@@ -45,7 +46,7 @@ import java.util.Locale;
 
 public class ResgisterSellerActivity extends AppCompatActivity implements LocationListener {
     private ImageButton imgback;
-    private ImageView gps,profile;
+    private ImageView gps, profile;
     private EditText edName, edPhone, edCountry, edCity, edState, edAddress, edEmail, edPassword, edCpPassword, edDilevery, edNameShop;
     private Button btnRegister;
 
@@ -70,10 +71,23 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
 
     private FirebaseAuth firebaseAuth;
     private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resgister_seller);
+
+
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(getApplicationContext(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION}, 101);
+        }
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationEnabled();
+        getLocation();
 
         imgback = findViewById(R.id.btnback);
         profile = findViewById(R.id.Improfilee);
@@ -92,14 +106,14 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
         btnRegister = findViewById(R.id.btnRegiter);
         gps = findViewById(R.id.btngps);
 
-        firebaseAuth=FirebaseAuth.getInstance();
-        progressDialog=new ProgressDialog(this);
+        firebaseAuth = FirebaseAuth.getInstance();
+        progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Please wait");
         progressDialog.setCanceledOnTouchOutside(false);
 
         //initr permission array
         locationPermisson = new String[]{Manifest.permission.ACCESS_FINE_LOCATION};
-        cameraPermisson = new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        cameraPermisson = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermisson = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         imgback.setOnClickListener(new View.OnClickListener() {
@@ -127,7 +141,6 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
         });
 
 
-
         gps.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,56 +153,58 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
             }
         });
     }
+
     //
-    private String fullName,shopName,phoneNumber,deliveryFee,country,state,city,address,email,password,cofirmPassword;
+    private String fullName, shopName, phoneNumber, deliveryFee, country, state, city, address, email, password, cofirmPassword;
 
     private void inpuData() {
-        fullName=edName.getText().toString().trim();
-        shopName=edNameShop.getText().toString().trim();
-        phoneNumber=edPhone.getText().toString().trim();
-        deliveryFee=edDilevery.getText().toString().trim();
-        country=edCountry.getText().toString().trim();
-        state=edState.getText().toString().trim();
-        city=edCity.getText().toString().trim();
-        address=edAddress.getText().toString().trim();
-        email=edEmail.getText().toString().trim();
-        password=edPassword.getText().toString().trim();
-        cofirmPassword=edCpPassword.getText().toString().trim();
+        fullName = edName.getText().toString().trim();
+        shopName = edNameShop.getText().toString().trim();
+        phoneNumber = edPhone.getText().toString().trim();
+        deliveryFee = edDilevery.getText().toString().trim();
+        country = edCountry.getText().toString().trim();
+        state = edState.getText().toString().trim();
+        city = edCity.getText().toString().trim();
+        address = edAddress.getText().toString().trim();
+        email = edEmail.getText().toString().trim();
+        password = edPassword.getText().toString().trim();
+        cofirmPassword = edCpPassword.getText().toString().trim();
 //validate data
-        if(TextUtils.isEmpty(fullName)){
-            Toast.makeText(this,"Enter Name ...",Toast.LENGTH_LONG).show();
+        if (TextUtils.isEmpty(fullName)) {
+            Toast.makeText(this, "Enter Name ...", Toast.LENGTH_LONG).show();
             return;
         }
-        if(TextUtils.isEmpty(shopName)){
-            Toast.makeText(this,"Shop Name ...",Toast.LENGTH_LONG).show();
+        if (TextUtils.isEmpty(shopName)) {
+            Toast.makeText(this, "Shop Name ...", Toast.LENGTH_LONG).show();
             return;
         }
-        if(TextUtils.isEmpty(phoneNumber)){
-            Toast.makeText(this,"PhoneNumber ...",Toast.LENGTH_LONG).show();
+        if (TextUtils.isEmpty(phoneNumber)) {
+            Toast.makeText(this, "PhoneNumber ...", Toast.LENGTH_LONG).show();
             return;
         }
-        if(TextUtils.isEmpty(deliveryFee)){
-            Toast.makeText(this,"Enter deliveryfee ...",Toast.LENGTH_LONG).show();
+        if (TextUtils.isEmpty(deliveryFee)) {
+            Toast.makeText(this, "Enter deliveryfee ...", Toast.LENGTH_LONG).show();
             return;
         }
-        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-            Toast.makeText(this,"Invalid email pattern ...",Toast.LENGTH_LONG).show();
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Invalid email pattern ...", Toast.LENGTH_LONG).show();
             return;
         }
-        if(password.length()<6){
-            Toast.makeText(this,"password must be 6 charaters long ...",Toast.LENGTH_LONG).show();
+        if (password.length() < 6) {
+            Toast.makeText(this, "password must be 6 charaters long ...", Toast.LENGTH_LONG).show();
             return;
         }
-        if(password.equals(cofirmPassword)){
-            Toast.makeText(this,"Password doesn't match ...",Toast.LENGTH_LONG).show();
+        if (password.equals(cofirmPassword)) {
+            Toast.makeText(this, "Password doesn't match ...", Toast.LENGTH_LONG).show();
             return;
         }
 
         createAcount();
 
     }
+
     //
-    private void createAcount(){
+    private void createAcount() {
         progressDialog.setMessage("Creating Acount....");
         progressDialog.show();
 
@@ -204,9 +219,9 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
-                    public void onFailure( Exception e) {
+                    public void onFailure(Exception e) {
                         progressDialog.dismiss();
-                        Toast.makeText(ResgisterSellerActivity.this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ResgisterSellerActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -214,22 +229,24 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
     private void saveFirebaseData() {
         progressDialog.setMessage("Saving Acount Info...");
 
-        String timestamp=""+System.currentTimeMillis();
-        if(imageUri==null){
+        String timestamp = "" + System.currentTimeMillis();
+        if (imageUri == null) {
             //save info with image
 
             //setdata to save
-            HashMap<String,Object> hashMap=new HashMap<>();
-            hashMap.put("uid",""+firebaseAuth.getUid());
-            hashMap.put("email",""+email);
-            hashMap.put("name",""+fullName);
-            hashMap.put("shopName",""+shopName);
-            hashMap.put("phone",""+phoneNumber);
-            hashMap.put("deliveryFee",""+deliveryFee);
-            hashMap.put("country",""+country);
-
-        }
-        else {
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("uid", "" + firebaseAuth.getUid());
+            hashMap.put("email", "" + email);
+            hashMap.put("name", "" + fullName);
+            hashMap.put("shopName", "" + shopName);
+            hashMap.put("phone", "" + phoneNumber);
+            hashMap.put("deliveryFee", "" + deliveryFee);
+            hashMap.put("country", "" + country);
+            hashMap.put("state", "" + state);
+            hashMap.put("city", "" + city);
+            hashMap.put("address", "" + address);
+            hashMap.put("country", "" + country);
+        } else {
 
         }
     }
@@ -244,47 +261,47 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
 
         // pass the constant to compare it
         // with the returned requestCode
-        startActivityForResult(Intent.createChooser(i, "Select Picture"),IMAGE_PICK_GALLERY_CODE);
+        startActivityForResult(Intent.createChooser(i, "Select Picture"), IMAGE_PICK_GALLERY_CODE);
     }
-//camera
+
+    //camera
     private void showImagePickDialog() {
-        String[] options={"Camera","Gallery"};
+        String[] options = {"Camera", "Gallery"};
         //doalog
-        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Pick Image").setItems(options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //hanle clicks
-                if(which==0){
+                if (which == 0) {
                     //camera click
-                    if(checkCameraPermisson()){
+                    if (checkCameraPermisson()) {
                         //camrea permisson allowed
                         pickFromCamera();
-                    }
-                    else {
+                    } else {
                         //not alloew
                         requestCameraPermisson();
                     }
-                }
-                else {
+                } else {
 
-                    if(checkStoragePermisson()){
+                    if (checkStoragePermisson()) {
                         //storage permisson allowed
                         pickFromGallery();
-                    }
-                    else {
-                            //not alloew
+                    } else {
+                        //not alloew
                         requestStoregePermisson();
                     }
                 }
             }
         }).show();
     }
-    private void pickFromGallery(){
-        Intent intent=new Intent(Intent.ACTION_PICK);
+
+    private void pickFromGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        startActivityForResult(intent,IMAGE_PICK_GALLERY_CODE);
+        startActivityForResult(intent, IMAGE_PICK_GALLERY_CODE);
     }
+
     private void pickFromCamera() {
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.Images.Media.TITLE, "Temp_image Title");
@@ -296,7 +313,8 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
         startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
 
     }
-//
+
+    //
     private void detecLocation() {
         Toast.makeText(this, "Please wait...", Toast.LENGTH_SHORT).show();
 
@@ -314,6 +332,46 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
     }
 
+    //
+    private void locationEnabled() {
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (!gps_enabled && !network_enabled) {
+            new AlertDialog.Builder(ResgisterSellerActivity.this)
+                    .setTitle("Enable GPS Service")
+                    .setMessage("We need your GPS location to show Near Places around you.")
+                    .setCancelable(false)
+                    .setPositiveButton("Enable", new
+                            DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface paramDialogInterface, int paramInt) {
+                                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                                }
+                            })
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        }
+    }
+
+    void getLocation() {
+        try {
+            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 500, 5, (LocationListener) this);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
     private void finAddress() {
         Geocoder geocoder;
         List<Address> addresses;
@@ -373,11 +431,24 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
     }
     //
     @Override
-    public void onLocationChanged(@NonNull Location location) {
-        latidute=location.getLatitude();
-        longitude=location.getLongitude();
+    public void onLocationChanged(Location location) {
+        try {
+            Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
 
-        finAddress();
+            String address=addresses.get(0).getAddressLine(0);//complete addres
+            String city=addresses.get(0).getLocality();
+            String state=addresses.get(0).getAdminArea();
+            String country=addresses.get(0).getCountryName();
+
+            //set address
+            edCity.setText(city);
+            edState.setText(state);
+            edCountry.setText(country);
+            edAddress.setText(address);
+
+        } catch (Exception e) {
+        }
 
     }
 
