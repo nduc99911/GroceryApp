@@ -4,6 +4,7 @@ import android.widget.Filter;
 
 
 import com.example.groceryapp.Adapter.AdapterProductSeller;
+import com.example.groceryapp.Model.ModelProduct;
 
 import java.util.ArrayList;
 

@@ -1,7 +1,6 @@
 package com.example.groceryapp;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -19,7 +18,6 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -31,10 +29,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.blogspot.atifsoftwares.circularimageview.CircularImageView;
+import com.example.groceryapp.activities.MainSellerActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -263,7 +260,7 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
                         public void onSuccess(Void unused) {
                             //db update
                             progressDialog.dismiss();
-                            Intent intent=new Intent(ResgisterSellerActivity.this,MainSellerActivity.class);
+                            Intent intent=new Intent(ResgisterSellerActivity.this, MainSellerActivity.class);
                             startActivity(intent);
                             finish();
                         }

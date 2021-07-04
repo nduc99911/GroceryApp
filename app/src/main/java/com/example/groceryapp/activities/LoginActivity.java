@@ -1,6 +1,5 @@
-package com.example.groceryapp;
+package com.example.groceryapp.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
@@ -15,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.groceryapp.R;
+import com.example.groceryapp.RegisterUserActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
@@ -58,7 +59,7 @@ private ProgressDialog progressDialog;
         tvNoAcount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(LoginActivity.this,RegisterUserActivity.class);
+                Intent intent=new Intent(LoginActivity.this, RegisterUserActivity.class);
                 startActivity(intent);
             }
         });
@@ -66,7 +67,7 @@ private ProgressDialog progressDialog;
         tvforgot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(LoginActivity.this,ForgotPasswordActivity.class);
+                Intent intent=new Intent(LoginActivity.this, ForgotPasswordActivity.class);
                 startActivity(intent);
             }
         });
@@ -143,13 +144,13 @@ private ProgressDialog progressDialog;
                             String accountType=""+s.child("accountType").getValue();
                             if(accountType.equals("Seller")){
                                 progressDialog.dismiss();
-                                Intent intent=new Intent(LoginActivity.this,MainSellerActivity.class);
+                                Intent intent=new Intent(LoginActivity.this, MainSellerActivity.class);
                                 startActivity(intent);
                                 finish();
                             }
                             else {
                                 progressDialog.dismiss();
-                                Intent intent=new Intent(LoginActivity.this,MainUserActivity.class);
+                                Intent intent=new Intent(LoginActivity.this, MainUserActivity.class);
                                 startActivity(intent);
                                 finish();
                             }

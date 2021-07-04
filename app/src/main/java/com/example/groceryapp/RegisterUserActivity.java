@@ -33,6 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blogspot.atifsoftwares.circularimageview.CircularImageView;
+import com.example.groceryapp.activities.MainUserActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -262,7 +263,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                         public void onSuccess(Void unused) {
                             //db update
                             progressDialog.dismiss();
-                            Intent intent=new Intent(RegisterUserActivity.this,MainUserActivity.class);
+                            Intent intent=new Intent(RegisterUserActivity.this, MainUserActivity.class);
                             startActivity(intent);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -291,17 +292,17 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                                 if(uriTask.isSuccessful()){
                                     //setdata to save
                                     HashMap<String, Object> hashMap = new HashMap<>();
-                                    hashMap.put("uid", "" + firebaseAuth.getUid());
-                                    hashMap.put("email", "" + email);
-                                    hashMap.put("name", "" + fullName);
-                                    hashMap.put("phone", "" + phoneNumber);
-                                    hashMap.put("country", "" + country);
-                                    hashMap.put("state", "" + state);
-                                    hashMap.put("city", "" + city);
-                                    hashMap.put("address", "" + address);
-                                    hashMap.put("latitude", "" + latidute);
-                                    hashMap.put("longitude", "" + longitude);
-                                    hashMap.put("timestamp", "" + timestamp);
+                                    hashMap.put("uid", ""+firebaseAuth.getUid());
+                                    hashMap.put("email", ""+email);
+                                    hashMap.put("name", ""+fullName);
+                                    hashMap.put("phone", ""+phoneNumber);
+                                    hashMap.put("country", ""+country);
+                                    hashMap.put("state", ""+state);
+                                    hashMap.put("city", ""+city);
+                                    hashMap.put("address", ""+address);
+                                    hashMap.put("latitude", ""+latidute);
+                                    hashMap.put("longitude", ""+longitude);
+                                    hashMap.put("timestamp", ""+timestamp);
                                     hashMap.put("accountType", "User" );
                                     hashMap.put("online", "true");
                                     hashMap.put("profileImage", ""+dowloadImageUri);//url of uploades image
@@ -323,6 +324,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                                             progressDialog.dismiss();
                                             Intent intent=new Intent(RegisterUserActivity.this,MainUserActivity.class);
                                             startActivity(intent);
+
                                         }
                                     });
                                 }

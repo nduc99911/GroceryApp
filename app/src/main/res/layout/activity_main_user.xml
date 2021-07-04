@@ -4,24 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainUserActivity">
+    tools:context=".activities.MainUserActivity">
     <RelativeLayout
+        android:id="@+id/Rltoolbar"
         android:layout_width="match_parent"
-        android:layout_height="80dp"
+        android:layout_height="wrap_content"
         android:padding="10dp"
         android:background="@drawable/shape_rect01">
-
-
-
-        <TextView
-            android:id="@+id/tvName"
-            android:layout_centerHorizontal="true"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Name" />
 
         <ImageButton
             android:id="@+id/btnlogout"
@@ -37,7 +26,97 @@
             android:layout_height="30dp"
             android:background="@null"
             android:layout_toStartOf="@id/btnlogout"
-
             android:src="@drawable/ic_baseline_edit_24" />
+
+
+        <com.blogspot.atifsoftwares.circularimageview.CircularImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/profileIv"
+            app:c_border="true"
+            app:c_background_color="@color/white"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/ic_baseline_person_pin_24"
+            ></com.blogspot.atifsoftwares.circularimageview.CircularImageView>
+        <TextView
+            android:id="@+id/tvName"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:layout_toEndOf="@id/profileIv"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name" />
+
+        <TextView
+            android:id="@+id/tvEmail"
+            android:layout_toEndOf="@id/profileIv"
+            android:layout_below="@+id/tvName"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Shop Name" />
+
+        <TextView
+            android:id="@+id/tvPhone"
+            android:layout_toEndOf="@id/profileIv"
+            android:layout_below="@+id/tvEmail"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email" />
+        <!--    //tab:Prodduc,Order-->
+        <LinearLayout
+            android:layout_below="@id/profileIv"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:padding="5dp"
+            android:background="@drawable/shape_rect03"
+            >
+            <!--            //Shop-->
+            <TextView
+                android:id="@+id/tabShop"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/shape_rect04"
+                android:text="Products"
+                android:textColor="@color/black"/>
+            <!--            //orther-->
+            <TextView
+                android:id="@+id/tabOrders"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Orders"
+                android:textColor="@color/black"/>
+
+
+        </LinearLayout>
     </RelativeLayout>
+<!--    Shop UI-->
+    <RelativeLayout
+        android:id="@+id/RlShop"
+        android:layout_below="@+id/Rltoolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            tools:listitem="@layout/row_shop"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:id="@+id/RvShop"
+            android:layout_height="match_parent">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </RelativeLayout>
+<!--OrderUI-->
+    <RelativeLayout
+        android:layout_below="@+id/Rltoolbar"
+        android:id="@+id/RlOrder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>

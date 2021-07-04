@@ -8,6 +8,9 @@ import android.os.Handler;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.example.groceryapp.activities.LoginActivity;
+import com.example.groceryapp.activities.MainSellerActivity;
+import com.example.groceryapp.activities.MainUserActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -32,7 +35,7 @@ private FirebaseAuth firebaseAuth;
                 FirebaseUser user=firebaseAuth.getCurrentUser();
                 if(user==null){
                     //user not logged in star login activity
-                    Intent intent=new Intent(SplashActivity.this,LoginActivity.class);
+                    Intent intent=new Intent(SplashActivity.this, LoginActivity.class);
                     startActivity(intent);
                 }
                 else {
@@ -47,24 +50,24 @@ private FirebaseAuth firebaseAuth;
     private void checkUserType() {
         //check user type :user,seller
         DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users");
-        reference.orderByChild("uid").equalTo(firebaseAuth.getUid())
+        reference.child(firebaseAuth.getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange( DataSnapshot snapshot) {
-                        for(DataSnapshot s:snapshot.getChildren()){
-                            String accountType=""+s.child("accountType").getValue();
+
+                            String accountType=""+snapshot.child("accountType").getValue();
                             String sp=accountType.trim();
                             if(sp.equals("Seller")){
-                                Intent intent=new Intent(SplashActivity.this,MainSellerActivity.class);
+                                Intent intent=new Intent(SplashActivity.this, MainSellerActivity.class);
                                 startActivity(intent);
                                 finish();
                             }
                             else {
-                                Intent intent=new Intent(SplashActivity.this,MainUserActivity.class);
+                                Intent intent=new Intent(SplashActivity.this, MainUserActivity.class);
                                 startActivity(intent);
                                 finish();
                             }
-                        }
+
                     }
 
                     @Override

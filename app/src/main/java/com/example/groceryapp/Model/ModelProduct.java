@@ -1,4 +1,4 @@
-package com.example.groceryapp;
+package com.example.groceryapp.Model;
 
 public class ModelProduct {
     private String productId;

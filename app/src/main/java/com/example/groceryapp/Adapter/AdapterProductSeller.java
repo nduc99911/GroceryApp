@@ -15,12 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.groceryapp.FilterProduct;
-import com.example.groceryapp.ModelProduct;
-import com.example.groceryapp.ProductEditActivity;
+import com.example.groceryapp.Model.ModelProduct;
+import com.example.groceryapp.activities.ProductEditActivity;
 import com.example.groceryapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;

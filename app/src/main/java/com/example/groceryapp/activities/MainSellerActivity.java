@@ -1,6 +1,5 @@
-package com.example.groceryapp;
+package com.example.groceryapp.activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.groceryapp.Adapter.AdapterProductSeller;
+import com.example.groceryapp.Constants;
+import com.example.groceryapp.Model.ModelProduct;
+import com.example.groceryapp.ProfileEditDSellerActivity;
+import com.example.groceryapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -110,7 +113,7 @@ private AdapterProductSeller adapterProductSeller;
         btnedit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainSellerActivity.this,ProfileEditDSellerActivity.class);
+                Intent intent=new Intent(MainSellerActivity.this, ProfileEditDSellerActivity.class);
                 startActivity(intent);
             }
         });
@@ -118,7 +121,7 @@ private AdapterProductSeller adapterProductSeller;
         btnaddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainSellerActivity.this,AddProductActivity.class);
+                Intent intent=new Intent(MainSellerActivity.this, AddProductActivity.class);
                 startActivity(intent);
             }
         });
@@ -280,7 +283,7 @@ private AdapterProductSeller adapterProductSeller;
     private void checkUser() {
         FirebaseUser user=firebaseAuth.getCurrentUser();
         if(user== null){
-            Intent intent=new Intent(MainSellerActivity.this,LoginActivity.class);
+            Intent intent=new Intent(MainSellerActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
         }else {
