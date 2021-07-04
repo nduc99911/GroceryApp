@@ -201,6 +201,7 @@ private String productTitle,productDescription,productCategory,productQuantity,o
             hashMap.put("productId",""+timestamp);
             hashMap.put("productTitle",""+productTitle);
             hashMap.put("productDescription",""+productDescription);
+            hashMap.put("productQuantity",""+productQuantity);
             hashMap.put("productCategory",""+productCategory);
             hashMap.put("productIcon","");
             hashMap.put("originalPrice",""+originalPrice);
@@ -246,6 +247,7 @@ private String productTitle,productDescription,productCategory,productQuantity,o
                                     hashMap.put("productId",""+timestamp);
                                     hashMap.put("productTitle",""+productTitle);
                                     hashMap.put("productDescription",""+productDescription);
+                                    hashMap.put("productQuantity",""+productQuantity);
                                     hashMap.put("productCategory",""+productCategory);
                                     hashMap.put("productIcon",""+dowloadImageUri);
                                     hashMap.put("originalPrice",""+originalPrice);
@@ -315,7 +317,6 @@ private String productTitle,productDescription,productCategory,productQuantity,o
     private void showImageDiaLog() {
         //optinons to dispaly in dialog
         String[] options={"Camera","Gallery"};
-        Context context;
         AlertDialog.Builder builder=new AlertDialog.Builder(this);
         builder.setTitle("Pick image")
                 .setItems(options, new DialogInterface.OnClickListener() {

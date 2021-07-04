@@ -50,10 +50,11 @@ import java.util.Locale;
 
 public class RegisterUserActivity extends AppCompatActivity implements LocationListener {
     private ImageButton imgback;
-    private ImageView gpsbtn,profile;
+    private ImageView gpsbtn;
     private EditText edName,edPhone,edCountry,edCity,edState,edAddress,edEmail,edPassword,edCpPassword;
     private Button btnRegister;
     private TextView tvRegiter;
+    private CircularImageView profile;
 //    CircularImageView profile;
     //permission constants
     private static final int LOCATION_REQUEST_CODE = 100;
@@ -65,6 +66,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
 
     //permissson arays
     private String[] locationPermisson;
+    //permissson arays
     private String[] cameraPermisson;
     private String[] storagePermisson;
 
@@ -142,8 +144,8 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
             @Override
             public void onClick(View v) {
                 //pick image
-//                showImagePickDialog();
-                imageChooser();
+                showImagePickDialog();
+
             }
         });
 
@@ -230,6 +232,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
 
     private void saveFirebaseData() {
         progressDialog.setMessage("Saving Acount Info...");
+        progressDialog.show();
 
         String timestamp = "" + System.currentTimeMillis();
         if (imageUri == null) {
@@ -261,7 +264,6 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                             progressDialog.dismiss();
                             Intent intent=new Intent(RegisterUserActivity.this,MainUserActivity.class);
                             startActivity(intent);
-                            finish();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -270,13 +272,12 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                     progressDialog.dismiss();
                     Intent intent=new Intent(RegisterUserActivity.this,MainUserActivity.class);
                     startActivity(intent);
-                    finish();
                 }
             });
 
         } else {
             //save info with image
-            String filePathAndName="profile_image/"+""+firebaseAuth.getUid();
+            String filePathAndName="profile_images/"+""+timestamp;
             //upload image
             StorageReference storageReference= FirebaseStorage.getInstance().getReference(filePathAndName);
             storageReference.putFile(imageUri)
@@ -286,7 +287,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                             //get url of upload image
                             Task<Uri> uriTask=taskSnapshot.getStorage().getDownloadUrl();
                             while(!uriTask.isSuccessful()){
-                                Uri uri=uriTask.getResult();
+                                Uri dowloadImageUri=uriTask.getResult();
                                 if(uriTask.isSuccessful()){
                                     //setdata to save
                                     HashMap<String, Object> hashMap = new HashMap<>();
@@ -303,7 +304,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                                     hashMap.put("timestamp", "" + timestamp);
                                     hashMap.put("accountType", "User" );
                                     hashMap.put("online", "true");
-                                    hashMap.put("profileImage", ""+uri);//url of uploades image
+                                    hashMap.put("profileImage", ""+dowloadImageUri);//url of uploades image
                                     //save to db
                                     DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users");
                                     reference.child(firebaseAuth.getUid()).setValue(hashMap)
@@ -314,7 +315,6 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                                                     progressDialog.dismiss();
                                                     Intent intent=new Intent(RegisterUserActivity.this,MainUserActivity.class);
                                                     startActivity(intent);
-                                                    finish();
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
                                         @Override
@@ -323,7 +323,6 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                                             progressDialog.dismiss();
                                             Intent intent=new Intent(RegisterUserActivity.this,MainUserActivity.class);
                                             startActivity(intent);
-                                            finish();
                                         }
                                     });
                                 }
@@ -426,30 +425,56 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         }).show();
     }
     private void pickFromGallery(){
-        Intent i = new Intent();
-        i.setType("image/*");
-        i.setAction(Intent.ACTION_GET_CONTENT);
+//        Intent i = new Intent();
+//        i.setType("image/*");
+//        i.setAction(Intent.ACTION_GET_CONTENT);
+//
+//        // pass the constant to compare it
+//        // with the returned requestCode
+//        startActivityForResult(Intent.createChooser(i, "Select Picture"),200);
 
-        // pass the constant to compare it
-        // with the returned requestCode
-        startActivityForResult(Intent.createChooser(i, "Select Picture"),200);
-
-//        Intent intent=new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        intent.setType("image/*");
-//        startActivityForResult(intent,IMAGE_PICK_GALLERY_CODE);
+        Intent intent=new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent,IMAGE_PICK_GALLERY_CODE);
     }
     private void pickFromCamera() {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Images.Media.TITLE, "Temp_image Title");
-        contentValues.put(MediaStore.Images.Media.DESCRIPTION, "Temp_desc Desctription");
-        imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+        ContentValues contentValues=new ContentValues();
+        contentValues.put(MediaStore.Images.Media.TITLE,"Temp_image_title");
+        contentValues.put(MediaStore.Images.Media.DESCRIPTION,"Temp_image_Description");
 
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-        startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
+        imageUri=getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,contentValues);
+
+        Intent intent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
+        startActivityForResult(intent,IMAGE_PICK_CAMERA_CODE);
 
     }
     //
+    private boolean checkStoragePermisson(){
+        boolean result= ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                (PackageManager.PERMISSION_GRANTED);
+
+        return result;
+    }
+    //
+    private void requestStoregePermisson(){
+        ActivityCompat.requestPermissions(this,storagePermisson,STORAGE_REQUEST_CODE);
+    }
+    //
+    private boolean checkCameraPermisson(){
+        boolean result= ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                (PackageManager.PERMISSION_GRANTED);
+
+        boolean result1= ContextCompat.checkSelfPermission(this,Manifest.permission.CAMERA) ==
+                (PackageManager.PERMISSION_GRANTED);
+        return result && result1;
+    }
+    //
+    private void requestCameraPermisson(){
+        ActivityCompat.requestPermissions(this,cameraPermisson,CAMERA_REQUEST_CODE);
+    }
+    //
+
     private void detecLocation() {
         Toast.makeText(this, "Please wait...", Toast.LENGTH_SHORT).show();
 
@@ -500,31 +525,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         ActivityCompat.requestPermissions(this,locationPermisson,LOCATION_REQUEST_CODE);
     }
     //
-    private boolean checkStoragePermisson(){
-        boolean result=ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)==
-                (PackageManager.PERMISSION_GRANTED);
-        return result;
-    }
-    //
-    private void requestStoregePermisson(){
-        ActivityCompat.requestPermissions(this,storagePermisson,STORAGE_REQUEST_CODE);
-    }
-    //
-    private boolean checkCameraPermisson(){
-        boolean result=ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CAMERA)==
-                (PackageManager.PERMISSION_GRANTED);
-        boolean result1=ContextCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)==
-                (PackageManager.PERMISSION_GRANTED);
-        return result && result1;
-    }
-    //
-    private void requestCameraPermisson(){
-        ActivityCompat.requestPermissions(this,storagePermisson,CAMERA_REQUEST_CODE);
-    }
-    //
+
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
@@ -580,7 +581,6 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                     }
                 }
             }
-            break;
 
             case CAMERA_REQUEST_CODE:{
                 if(grantResults.length>0){
@@ -595,11 +595,10 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                     }
                 }
             }
-            break;
 
             case STORAGE_REQUEST_CODE:{
                 if(grantResults.length>0){
-                    boolean storageAccept=grantResults[0]==PackageManager.PERMISSION_GRANTED;
+                    boolean storageAccept=grantResults[1]==PackageManager.PERMISSION_GRANTED;
                     if(storageAccept){
                         //permisson alloewed
                         pickFromGallery();
@@ -609,10 +608,6 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                     }
                 }
             }
-            break;
-
-
-
         }
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -620,7 +615,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode,  Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+
 //        if(requestCode==RESULT_OK){
 //            if(requestCode== IMAGE_PICK_GALLERY_CODE){
 //                Toast.makeText(this,"ok",Toast.LENGTH_LONG).show();
@@ -635,19 +630,19 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
 //                profile.setImageURI(imageUri);
 //            }
 //        }
-        if (resultCode == RESULT_OK) {
+        if(resultCode==RESULT_OK){
+            if(requestCode==IMAGE_PICK_GALLERY_CODE){
 
-            // compare the resultCode with the
-            // SELECT_PICTURE constant
-            if (requestCode == IMAGE_PICK_GALLERY_CODE) {
-                // Get the url of the image from data
-                Uri selectedImageUri = data.getData();
-                if (null != selectedImageUri) {
-                    // update the preview image in the layout
-                    profile.setImageURI(selectedImageUri);
-                }
+                //save picked imag_uri
+                imageUri=data.getData();
+
+                //set image
+                profile.setImageURI(imageUri);
+            }
+            else if(requestCode==IMAGE_PICK_CAMERA_CODE){
+                profile.setImageURI(imageUri);
             }
         }
-
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

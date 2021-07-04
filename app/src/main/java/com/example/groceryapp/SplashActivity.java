@@ -47,7 +47,7 @@ private FirebaseAuth firebaseAuth;
     private void checkUserType() {
         //check user type :user,seller
         DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users");
-        reference.child(firebaseAuth.getUid())
+        reference.orderByChild("uid").equalTo(firebaseAuth.getUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange( DataSnapshot snapshot) {
