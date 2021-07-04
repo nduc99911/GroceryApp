@@ -17,9 +17,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".AddProductActivity"></activity>
-        <activity android:name=".ProfileEditDSellerActivity"></activity>
-        <activity android:name=".ProfileEditUserActivity"></activity>
+        <activity android:name=".ProductEditActivity">
+        </activity>
+        <activity android:name=".AddProductActivity" />
+        <activity android:name=".ProfileEditDSellerActivity" />
+        <activity android:name=".ProfileEditUserActivity" />
         <activity android:name=".MainUserActivity" />
         <activity android:name=".MainSellerActivity" />
         <activity android:name=".ForgotPasswordActivity" />
