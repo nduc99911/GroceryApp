@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!---->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+<!---->
+    <RelativeLayout
+        android:id="@+id/toolvarRl"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:padding="10dp"
+        android:background="@drawable/shape_rect01">
+
+        <ImageButton
+
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/btnBack"
+            android:background="@null"
+            android:src="@drawable/ic_baseline_chevron_left_24"/>
+
+        <ImageButton
+            android:background="@null"
+        android:src="@drawable/ic_baseline_delete_24"
+        android:id="@+id/btnDelete"
+        android:layout_width="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_height="30dp"/>
+
+        <ImageButton
+            android:background="@null"
+            android:src="@drawable/ic_baseline_edit_24"
+            android:id="@+id/btnEdit"
+            android:layout_width="30dp"
+            android:layout_toStartOf="@+id/btnDelete"
+            android:layout_height="30dp"/>
+
+
+        <TextView
+            android:textSize="20sp"
+            android:layout_centerHorizontal="true"
+            android:text="Product Details"
+            android:id="@+id/tvName"
+            android:textStyle="bold"
+            android:layout_marginTop="2dp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            />
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/ImProduct"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="80dp"
+        android:background="@color/colorPrimary"
+        android:adjustViewBounds="true"
+        android:padding="5dp"
+        android:src="@drawable/ic_baseline_shopping_cart_24"/>
+
+
+        <LinearLayout
+            android:padding="10dp"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ImProduct">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/TvdiscountNote"
+                android:background="@drawable/shape_rect05"
+                android:padding="5dp"
+                android:textSize="10sp"
+                android:text="10% OFF"
+                android:paddingEnd="5dp"
+                android:textColor="@color/colorGreen"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/TvTittle"
+                android:layout_marginTop="5dp"
+                android:text="The Product Title"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/TvDescription"
+                android:layout_marginTop="5dp"
+                android:text="The Product Description"
+                android:textColor="@color/black"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/TvCategory"
+                android:layout_marginTop="5dp"
+                android:text="Category"
+                android:textColor="@color/black"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/TvQuantity"
+                android:layout_marginTop="5dp"
+                android:text="The Product Title"
+                android:textColor="@color/black"
+                />
+
+            <RelativeLayout
+                android:layout_marginTop="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/TvdiscountPrice"
+                    android:text="$10"
+                    android:layout_marginEnd="10dp"
+                    android:textColor="@color/colorGray02"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/TvOrialPrice"
+                    android:text="$15"
+                    android:layout_toEndOf="@+id/TvdiscountPrice"
+                    android:textColor="@color/colorGray02"
+                    />
+            </RelativeLayout>
+        </LinearLayout>
+</RelativeLayout>
