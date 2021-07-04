@@ -17,8 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.ProductEditActivity">
-        </activity>
+        <activity android:name=".activities.ShopDetailActivity"></activity>
+        <activity android:name=".activities.ProductEditActivity"></activity>
         <activity android:name=".activities.AddProductActivity" />
         <activity android:name=".ProfileEditDSellerActivity" />
         <activity android:name=".ProfileEditUserActivity" />

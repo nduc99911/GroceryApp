@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -56,6 +57,7 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
 
     //permission constants
     private static final int LOCATION_REQUEST_CODE = 100;
+    //permission constants
     private static final int CAMERA_REQUEST_CODE = 200;
     private static final int STORAGE_REQUEST_CODE = 300;
     //image pick constants
@@ -67,7 +69,7 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
     private String[] cameraPermisson;
     private String[] storagePermisson;
 
-    private Uri imageUri;
+    private Uri image_uri;
 
     private double latidute, longitude;
     private LocationManager locationManager;
@@ -130,8 +132,8 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
             @Override
             public void onClick(View v) {
                 //pick image
-//                showImagePickDialog();
-                imageChooser();
+                showImagePickDialog();
+//                imageChooser();
             }
         });
 
@@ -230,7 +232,7 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
         progressDialog.setMessage("Saving Acount Info...");
 
         String timestamp = "" + System.currentTimeMillis();
-        if (imageUri == null) {
+        if (image_uri == null) {
             //save info with image
 
             //setdata to save
@@ -277,10 +279,10 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
 
         } else {
                 //save info with image
-            String filePathAndName="profile_image/"+""+firebaseAuth.getUid();
+            String filePathAndName="profile_images/"+""+firebaseAuth.getUid();
             //upload image
             StorageReference storageReference=FirebaseStorage.getInstance().getReference(filePathAndName);
-            storageReference.putFile(imageUri)
+            storageReference.putFile(image_uri)
             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -310,7 +312,7 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
                             hashMap.put("profileImage", ""+uri);//url of uploades image
                             //save to db
                             DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users");
-                            reference.child(firebaseAuth.getUid()).setValue(hashMap)
+                            reference.child(firebaseAuth.getUid()).child(timestamp).setValue(hashMap)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
@@ -324,10 +326,11 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
                                 @Override
                                 public void onFailure( Exception e) {
                                     //fail update db
-                                    progressDialog.dismiss();
-                                    Intent intent=new Intent(ResgisterSellerActivity.this,MainSellerActivity.class);
-                                    startActivity(intent);
-                                    finish();
+//                                    progressDialog.dismiss();
+//                                    Intent intent=new Intent(ResgisterSellerActivity.this,MainSellerActivity.class);
+//                                    startActivity(intent);
+//                                    finish();
+                                    Log.e("ERRO", ""+e.getMessage());
                                 }
                             });
                         }
@@ -391,23 +394,19 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
     }
 
     private void pickFromGallery() {
-        Intent i = new Intent();
-        i.setType("image/*");
-        i.setAction(Intent.ACTION_GET_CONTENT);
-
-        // pass the constant to compare it
-        // with the returned requestCode
-        startActivityForResult(Intent.createChooser(i, "Select Picture"),200);
+        Intent intent=new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent,IMAGE_PICK_GALLERY_CODE);
     }
 
     private void pickFromCamera() {
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.Images.Media.TITLE, "Temp_image Title");
         contentValues.put(MediaStore.Images.Media.DESCRIPTION, "Temp_desc Desctription");
-        imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+        image_uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
         startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
 
     }
@@ -601,7 +600,7 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
 
             case STORAGE_REQUEST_CODE:{
                 if(grantResults.length>0){
-                    boolean storageAccept=grantResults[0]==PackageManager.PERMISSION_GRANTED;
+                    boolean storageAccept=grantResults[1]==PackageManager.PERMISSION_GRANTED;
                     if(storageAccept){
                         //permisson alloewed
                         pickFromGallery();
@@ -635,19 +634,20 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
 //                profile.setImageURI(imageUri);
 //            }
 //        }
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
+        if(resultCode==RESULT_OK){
+            if(requestCode==IMAGE_PICK_GALLERY_CODE){
 
-            // compare the resultCode with the
-            // SELECT_PICTURE constant
-            if (requestCode == IMAGE_PICK_GALLERY_CODE) {
-                // Get the url of the image from data
-                imageUri = data.getData();
-                if (null != imageUri) {
-                    // update the preview image in the layout
-                    profile.setImageURI(imageUri);
-                }
+                //save picked imag_uri
+                image_uri=data.getData();
+
+                //set image
+                profile.setImageURI(image_uri);
+            }
+            else if(requestCode==IMAGE_PICK_CAMERA_CODE){
+                profile.setImageURI(image_uri);
             }
         }
+        super.onActivityResult(requestCode, resultCode, data);
+
     }
 }

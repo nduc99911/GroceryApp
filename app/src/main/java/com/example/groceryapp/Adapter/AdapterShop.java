@@ -1,6 +1,7 @@
 package com.example.groceryapp.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.groceryapp.Model.ModelShop;
 import com.example.groceryapp.R;
+import com.example.groceryapp.activities.ShopDetailActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -80,6 +82,15 @@ public ArrayList<ModelShop> listShop;
         catch (Exception e){
             holder.ImShop.setImageResource(R.drawable.shop);
         }
+
+        holder.ImNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(context, ShopDetailActivity.class);
+                intent.putExtra("shopUid",uid);
+                context.startActivity(intent);
+            }
+        });
 
 
     }
