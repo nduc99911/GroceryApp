@@ -537,7 +537,8 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
             String city=addresses.get(0).getLocality();
             String state=addresses.get(0).getAdminArea();
             String country=addresses.get(0).getCountryName();
-
+            latidute=addresses.get(0).getLatitude();
+            longitude=addresses.get(0).getLongitude();
             //set address
             edCity.setText(city);
             edState.setText(state);
@@ -621,19 +622,7 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode,  Intent data) {
-//        if(requestCode==RESULT_OK){
-//            if(requestCode== IMAGE_PICK_GALLERY_CODE){
-//                //get picked image
-//                imageUri=data.getData();
-//                //ser to imageview
-//                profile.setImageURI(imageUri);
-//                Toast.makeText(this,"ok",Toast.LENGTH_LONG).show();
-//
-//            }
-//            else if(requestCode==IMAGE_PICK_CAMERA_CODE){
-//                profile.setImageURI(imageUri);
-//            }
-//        }
+
         if(resultCode==RESULT_OK){
             if(requestCode==IMAGE_PICK_GALLERY_CODE){
 

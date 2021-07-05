@@ -22,7 +22,8 @@
         android:adjustViewBounds="true"
         />
 
-    <LinearLayout
+    <RelativeLayout
+        android:layout_toStartOf="@+id/Imnext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -30,6 +31,8 @@
         android:layout_toEndOf="@+id/ImproducIcon"
         >
         <TextView
+            android:textSize="10sp"
+            android:layout_alignParentEnd="true"
             android:background="@drawable/shape_rect05"
             android:id="@+id/TvdiscountNote"
             android:padding="5dp"
@@ -41,6 +44,7 @@
         </TextView>
 
         <TextView
+            android:textStyle="bold"
             android:id="@+id/TvTittle"
             android:text="Title"
             android:layout_marginTop="5dp"
@@ -51,21 +55,36 @@
         </TextView>
 
         <TextView
-            android:id="@+id/TvQuantity"
-            android:text="1 Kg "
+            android:layout_below="@+id/TvTittle"
+            android:maxLines="2"
+            android:minLines="2"
+            android:id="@+id/TvDescription"
+            android:text="The roduct Description"
             android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
         </TextView>
 
+
+        <TextView
+            android:gravity="center_vertical"
+            android:drawableStart="@drawable/ic_baseline_add_shopping_cart_24"
+            android:layout_below="@+id/TvDescription"
+            android:id="@+id/TvaddToCart"
+            android:text="Add To Cart"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
       <RelativeLayout
+          android:layout_below="@+id/TvaddToCart"
+          android:layout_alignParentEnd="true"
           android:layout_marginTop="5dp"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content">
 
           <TextView
-
               android:id="@+id/TvdiscountPrice"
               android:text="$10"
               android:layout_marginEnd="10dp"
@@ -83,7 +102,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"/>
       </RelativeLayout>
-    </LinearLayout>
+    </RelativeLayout>
     <ImageView
         android:layout_marginEnd="5dp"
         android:src="@drawable/ic_baseline_navigate_next_24"

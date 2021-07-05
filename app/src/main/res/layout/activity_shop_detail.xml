@@ -1,9 +1,212 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.ShopDetailActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+<!--    shop detail-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/Rlshop">
+
+        <ImageView
+            android:id="@+id/ImShop"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@color/colorGray02"/>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="#79000000"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:layout_marginTop="40dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/TvShopName"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/white"
+                android:text="Shop Name"
+                android:layout_margin="3dp"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/TvPhone"
+                android:layout_below="@+id/TvShopName"
+                android:textColor="@color/white"
+                android:text="Phone"
+               android:layout_marginStart="3dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/TvEmail"
+                android:layout_below="@+id/TvPhone"
+                android:textColor="@color/white"
+                android:text="Email"
+                android:layout_marginStart="3dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/TvOpenClose"
+                android:layout_below="@+id/TvShopName"
+                android:textColor="@color/white"
+                android:text="Open"
+                android:padding="5dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="3dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/TvDelivery"
+                android:layout_below="@+id/TvOpenClose"
+                android:textColor="@color/white"
+                android:text="Delivery Fee"
+                android:padding="5dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="3dp"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/TvAdress"
+                android:layout_below="@+id/TvEmail"
+                android:textColor="@color/white"
+                android:text="Adress"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="3dp"/>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+            <ImageButton
+                android:background="@null"
+                android:src="@drawable/ic_baseline_call_24"
+                android:id="@+id/btnCall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+
+                <ImageButton
+                    android:layout_marginStart="5dp"
+                    android:id="@+id/btnMaps"
+                    android:background="@null"
+                    android:src="@drawable/ic_baseline_map_24"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+<!--    Toobar-->
+    <RelativeLayout
+        android:background="@drawable/shape_rect01"
+        android:padding="10dp"
+        android:id="@+id/Rltoolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <ImageButton
+        android:src="@drawable/ic_baseline_power_settings_new_24"
+        android:layout_alignParentEnd="true"
+        android:background="@null"
+        android:id="@+id/btnLogOut"
+        android:layout_width="30dp"
+        android:layout_height="30dp"/>
+
+
+        <ImageButton
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_baseline_chevron_left_24"
+            android:background="@null"
+            android:id="@+id/btnCart"
+            android:layout_width="30dp"
+            android:layout_height="30dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:text="Shop Details"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            />
+    </RelativeLayout>
+
+<!--    Products-->
+    <RelativeLayout
+        android:id="@+id/Rlproducts"
+        android:layout_below="@id/Rlshop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+<!--    Search-->
+
+        <EditText
+            android:padding="10dp"
+            android:hint="Search"
+            android:drawablePadding="10dp"
+            android:drawableStart="@drawable/ic_baseline_search_24"
+            android:background="@drawable/shape_recy02"
+            android:layout_margin="5dp"
+            android:id="@+id/EdsearchProduct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+<!--filter button-->
+        <ImageButton
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:id="@+id/btnFilter"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@null"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_baseline_dashboard_24"/>
+<!--show filter product tittle-->
+        <TextView
+            android:textColor="@color/black"
+            android:layout_below="@+id/EdsearchProduct"
+            android:text="Showing All"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="5dp"
+            android:id="@+id/TvFilterProduct"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+<!--        show product-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/RvProduct"
+            android:layout_below="@id/TvFilterProduct"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/row_product_seller"
+            />
+    </RelativeLayout>
+</RelativeLayout>

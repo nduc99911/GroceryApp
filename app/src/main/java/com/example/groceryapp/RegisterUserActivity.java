@@ -534,7 +534,8 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         try {
             Geocoder geocoder = new Geocoder(getApplicationContext(), Locale.getDefault());
             List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-
+            longitude=addresses.get(0).getLongitude();
+            latidute=addresses.get(0).getLatitude();
             String address=addresses.get(0).getAddressLine(0);//complete addres
             String city=addresses.get(0).getLocality();
             String state=addresses.get(0).getAdminArea();

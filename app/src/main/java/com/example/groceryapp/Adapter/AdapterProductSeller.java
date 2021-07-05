@@ -147,6 +147,7 @@ public class AdapterProductSeller extends RecyclerView.Adapter<AdapterProductSel
         else {
             TvdiscountPrice.setVisibility(View.GONE);
             TvdiscountNote.setVisibility(View.GONE);
+            TvOrialPrice.setPaintFlags(0);
         }
         try{
             Picasso.get().load(icon).placeholder(R.drawable.ic_baseline_add_shopping_cart_24).into(ImProduct);
