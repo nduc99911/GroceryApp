@@ -3,16 +3,20 @@ package com.example.groceryapp.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
 
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,7 +25,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.groceryapp.Adapter.AdapterProductUsers;
+import com.example.groceryapp.Adapter.AdpaterCartItem;
 import com.example.groceryapp.Constants;
+import com.example.groceryapp.Model.ModelCartItem;
 import com.example.groceryapp.Model.ModelProduct;
 import com.example.groceryapp.Model.ModelShop;
 import com.example.groceryapp.R;
@@ -35,6 +41,9 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import p32929.androideasysql_library.Column;
+import p32929.androideasysql_library.EasyDB;
+
 public class ShopDetailActivity extends AppCompatActivity {
 ImageView ImShop;
 TextView TvShopName,TvPhone,TvEmail,TvOpenClose,TvDelivery,TvAdress,TvFilterProduct;
@@ -46,9 +55,13 @@ private String shopUid;
 private FirebaseAuth firebaseAuth;
 String myLatitude,myLongtidude;
 String shopName,shopEmail,shopPhone,shopAddress,shopLatitude,shopLongtidude;
-
+public String deliveryFee;
 private ArrayList<ModelProduct> list;
 private AdapterProductUsers adapterProductUsers;
+
+//cart
+    private ArrayList<ModelCartItem> cartItems;
+    private AdpaterCartItem adpaterCartItem;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,7 +144,7 @@ private AdapterProductUsers adapterProductUsers;
         btnCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                showCartDialog();
             }
         });
 
@@ -147,6 +160,81 @@ private AdapterProductUsers adapterProductUsers;
                 openMap();
             }
         });
+    }
+
+
+    public double allTotalPrice=0.00;
+    public TextView TvShopName1,TvdTotal,TvdFee,TvTotal,btnCheckout;
+    private void showCartDialog() {
+        //init list
+        cartItems=new ArrayList<>();
+
+        View view= LayoutInflater.from(this).inflate(R.layout.dialog_cart, null);
+        //init View
+         TvShopName1=view.findViewById(R.id.TvShopName);
+        TvdTotal=view.findViewById(R.id.TvdTotal);
+        TvdFee=view.findViewById(R.id.TvdFee);
+         TvTotal=view.findViewById(R.id.TvTotal);
+         btnCheckout=view.findViewById(R.id.btnCheckout);
+        RecyclerView RvcartItem=view.findViewById(R.id.RvcartItem);
+
+        //alert dialog
+        Context context;
+        AlertDialog.Builder builder=new AlertDialog.Builder(this);
+        //set view to dialog
+        builder.setView(view);
+
+        TvShopName1.setText(shopName);
+
+        EasyDB easyDB=EasyDB.init(this,"ITEMS_DB")
+                .setTableName("ITEMS_TABLE")
+                .addColumn(new Column("Item_Id",new String[]{"text","unique"}))
+                .addColumn(new Column("Item_PID",new String[]{"text","not null"}))
+                .addColumn(new Column("Item_Name",new String[]{"text","not null"}))
+                .addColumn(new Column("Item_Price_Each",new String[]{"text","not null"}))
+                .addColumn(new Column("Item_Price",new String[]{"text","not null"}))
+                .addColumn(new Column("Item_Quantity",new String[]{"text","not null"}))
+                .doneTableColumn();
+
+        //get all recods from db
+        Cursor res=easyDB.getAllData();
+        while ((res.moveToNext())){
+            String id=res.getString(1);
+            String pId=res.getString(2);
+            String name=res.getString(3);
+            String price=res.getString(4);
+            String cost=res.getString(5);
+            String quantity=res.getString(6);
+
+            allTotalPrice=allTotalPrice+Double.parseDouble(cost);
+
+            ModelCartItem modelCartItem=new ModelCartItem(""+id,""+pId,""+name,""+price,""+cost,""+quantity);
+            cartItems.add(modelCartItem);
+
+
+        }
+        //set adapter
+        adpaterCartItem=new AdpaterCartItem(this,cartItems);
+        RvcartItem.setAdapter(adapterProductUsers);
+
+        TvdFee.setText("$"+deliveryFee);
+        TvdTotal.setText("$"+String.format("%.2f",allTotalPrice));
+        TvTotal.setText("$"+(allTotalPrice+Double.parseDouble(deliveryFee.replace("$",""))));
+
+        //show dialog
+        AlertDialog dialog=builder.create();
+        dialog.show();
+
+        //reset dialog
+        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                allTotalPrice=0.00;
+            }
+        });
+
+
+
     }
 
     private void openMap() {

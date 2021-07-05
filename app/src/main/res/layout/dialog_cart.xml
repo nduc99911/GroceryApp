@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textAllCaps="true"
+            style="@style/TextAppearance.AppCompat.Headline"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:text="Order To"/>
+
+<!--        shop name-->
+        <TextView
+            android:id="@+id/TvShopName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:textAllCaps="true"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:text="Order To"/>
+
+        <View
+            android:background="#f5f0f0"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"/>
+
+<!--        shop cart item-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RvcartItem"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:padding="5dp"
+            tools:listitem="@layout/row_cart_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <RelativeLayout
+            android:padding="10dp"
+            android:id="@+id/priceslayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/TvTotalLable"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:text="Sub Total:"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/TvdTotal"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:text="$10"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+
+            <TextView
+                android:id="@+id/TvFeeLable"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:text="Delivery Fee:"
+                android:layout_below="@+id/TvTotalLable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/TvdFee"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:text="$12"
+                android:layout_below="@+id/TvdTotal"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/TvLableTotal"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:text="Total Price:"
+                android:layout_below="@+id/TvFeeLable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/TvTotal"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:padding="5dp"
+                android:text="$12"
+                android:layout_below="@+id/TvdFee"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
+
+        <Button
+
+            android:text="Confim Order"
+            android:padding="15dp"
+            android:background="@color/colorPrimary"
+            android:id="@+id/btnCheckout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+</ScrollView>
