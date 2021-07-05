@@ -22,7 +22,7 @@
 
 <!--        shop name-->
         <TextView
-            android:id="@+id/TvShopName"
+            android:id="@+id/TvShopName1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
@@ -39,11 +39,12 @@
 <!--        shop cart item-->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/RvcartItem"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:padding="5dp"
-            tools:listitem="@layout/row_cart_item"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/row_cart_item" />
+
         <RelativeLayout
             android:padding="10dp"
             android:id="@+id/priceslayout"

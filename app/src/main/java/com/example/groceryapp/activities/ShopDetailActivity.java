@@ -91,7 +91,7 @@ private AdapterProductUsers adapterProductUsers;
         loadMyInfo();
         loadShopDetails();
         loadShopProducts();
-
+        deleteCart();
         //search
         EdsearchProduct.addTextChangedListener(new TextWatcher() {
             @Override
@@ -162,29 +162,41 @@ private AdapterProductUsers adapterProductUsers;
         });
     }
 
+    private void deleteCart() {
+        EasyDB easyDB=EasyDB.init(this,"ITEMS_DB")
+                .setTableName("ITEMS_TABLE")
+                .addColumn(new Column("Item_Id",new String[]{"text","unique"}))
+                .addColumn(new Column("Item_PID",new String[]{"text","not null"}))
+                .addColumn(new Column("Item_Name",new String[]{"text","not null"}))
+                .addColumn(new Column("Item_Price_Each",new String[]{"text","not null"}))
+                .addColumn(new Column("Item_Price",new String[]{"text","not null"}))
+                .addColumn(new Column("Item_Quantity",new String[]{"text","not null"}))
+                .doneTableColumn();
+        easyDB.deleteAllDataFromTable();//delete all recoeds from cart
+    }
+
 
     public double allTotalPrice=0.00;
-    public TextView TvShopName1,TvdTotal,TvdFee,TvTotal,btnCheckout;
+    public TextView TvdTotal,TvdFee,TvTotal,btnCheckout;
     private void showCartDialog() {
         //init list
         cartItems=new ArrayList<>();
 
         View view= LayoutInflater.from(this).inflate(R.layout.dialog_cart, null);
         //init View
-         TvShopName1=view.findViewById(R.id.TvShopName);
+         TextView TvShopName=view.findViewById(R.id.TvShopName1);
         TvdTotal=view.findViewById(R.id.TvdTotal);
         TvdFee=view.findViewById(R.id.TvdFee);
-         TvTotal=view.findViewById(R.id.TvTotal);
+        TvTotal=view.findViewById(R.id.TvTotal);
          btnCheckout=view.findViewById(R.id.btnCheckout);
         RecyclerView RvcartItem=view.findViewById(R.id.RvcartItem);
 
         //alert dialog
-        Context context;
         AlertDialog.Builder builder=new AlertDialog.Builder(this);
         //set view to dialog
         builder.setView(view);
 
-        TvShopName1.setText(shopName);
+        TvShopName.setText(shopName);
 
         EasyDB easyDB=EasyDB.init(this,"ITEMS_DB")
                 .setTableName("ITEMS_TABLE")
@@ -210,12 +222,10 @@ private AdapterProductUsers adapterProductUsers;
 
             ModelCartItem modelCartItem=new ModelCartItem(""+id,""+pId,""+name,""+price,""+cost,""+quantity);
             cartItems.add(modelCartItem);
-
-
         }
         //set adapter
         adpaterCartItem=new AdpaterCartItem(this,cartItems);
-        RvcartItem.setAdapter(adapterProductUsers);
+        RvcartItem.setAdapter(adpaterCartItem);
 
         TvdFee.setText("$"+deliveryFee);
         TvdTotal.setText("$"+String.format("%.2f",allTotalPrice));
@@ -260,7 +270,7 @@ private AdapterProductUsers adapterProductUsers;
                 shopEmail=""+snapshot.child("email").getValue();
                 shopLatitude=""+snapshot.child("latitude").getValue();
                 shopLongtidude=""+snapshot.child("longitude").getValue();
-                String deliveryFee=""+snapshot.child("deliveryFee").getValue();
+                 deliveryFee=""+snapshot.child("deliveryFee").getValue();
                 String address=""+snapshot.child("address").getValue();
                 String profileImage=""+snapshot.child("profileImage").getValue();
                 String shopOpen=""+snapshot.child("shopOpen").getValue();

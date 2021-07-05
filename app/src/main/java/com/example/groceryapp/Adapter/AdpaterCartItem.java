@@ -53,7 +53,7 @@ public class AdpaterCartItem extends RecyclerView.Adapter<AdpaterCartItem.Holder
         //set data
         holder.tvItemTittle.setText(""+title);
         holder.tvItemPrice.setText(""+cost);
-        holder.tvItemQuantity.setText(""+quantity);
+        holder.tvItemQuantity.setText("["+quantity+"]");
         holder.tvItemPriceEach.setText(""+price);
 
         holder.tvRemoveItem.setOnClickListener(new View.OnClickListener() {
@@ -77,9 +77,13 @@ public class AdpaterCartItem extends RecyclerView.Adapter<AdpaterCartItem.Holder
                 notifyItemChanged(position);
                 notifyDataSetChanged();
 
-                double tx=Double.parseDouble((((ShopDetailActivity)context).TvdTotal.getText().toString().trim().replace("$","")));
+                double tx=Double.parseDouble((((ShopDetailActivity)context).TvTotal.getText().toString().trim().replace("$","")));
                 double totalPrice=tx - Double.parseDouble(cost.replace("$",""));
                 double deliveryFee=Double.parseDouble((((ShopDetailActivity)context).deliveryFee.replace("$","")));
+                double sTotalPrice=Double.parseDouble(String.format("$.2f",totalPrice))-Double.parseDouble(String.format("%.2f",deliveryFee));
+                ((ShopDetailActivity)context).allTotalPrice=0.00;
+                ((ShopDetailActivity)context).TvdTotal.setText("$"+String.format("%.2f",sTotalPrice));
+                ((ShopDetailActivity)context).TvTotal.setText("$"+String.format("%.2f",Double.parseDouble(String.format("%.2f",totalPrice))));
             }
         });
 

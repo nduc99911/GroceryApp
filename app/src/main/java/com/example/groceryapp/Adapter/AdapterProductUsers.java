@@ -199,12 +199,12 @@ private int quantity=0;
             @Override
             public void onClick(View v) {
                 String title=TvTitle.getText().toString().trim();
-                String priceEach=TvOrialPrice.getText().toString().trim().replace("$","");
-                String price=TvFinal.getText().toString().trim().replace("$","");
+                String priceEach=price;
+                String totalPrice=TvFinal.getText().toString().trim().replace("$","");
                 String quantity=TvQuantity.getText().toString().trim();
 
                 //add to db(SQlite)
-                addToCart(id,title,priceEach,price,quantity);
+                addToCart(id,title,priceEach,totalPrice,quantity);
 
                 dialog.dismiss();
             }
@@ -212,7 +212,7 @@ private int quantity=0;
     }
 
     private int itemId=1;
-    private void addToCart(String id, String title, String priceEach, String price, String quantity) {
+    private void addToCart(String id, String title, String priceEach, String totalPrice, String quantity) {
         EasyDB easyDB=EasyDB.init(context,"ITEMS_DB")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id",new String[]{"text","unique"}))
@@ -227,7 +227,7 @@ private int quantity=0;
                 .addData("Item_PID",id)
                 .addData("Item_Name",title)
                 .addData("Item_Price_Each",priceEach)
-                .addData("Item_Price",price)
+                .addData("Item_Price",totalPrice)
                 .addData("Item_Quantity",quantity)
                 .doneDataAdding();
         Toast.makeText(context,"Added to cart...",Toast.LENGTH_LONG).show();
