@@ -213,6 +213,7 @@ private int quantity=0;
 
     private int itemId=1;
     private void addToCart(String id, String title, String priceEach, String totalPrice, String quantity) {
+        itemId++;
         EasyDB easyDB=EasyDB.init(context,"ITEMS_DB")
                 .setTableName("ITEMS_TABLE")
                 .addColumn(new Column("Item_Id",new String[]{"text","unique"}))
