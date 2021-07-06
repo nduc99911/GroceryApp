@@ -100,7 +100,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     private void loadOrderDetails() {
-        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("User");
+        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Users");
         reference.child(orderTo).child("Orders").child(orderId)
                 .addValueEventListener(new ValueEventListener() {
                     @Override
@@ -116,6 +116,9 @@ public class OrderDetailActivity extends AppCompatActivity {
                         String latitude=""+snapshot.child("latitude").getValue();
                         String longitude=""+snapshot.child("longitude").getValue();
 
+                        TvOrderId.setText(orderId);
+                        TvOrderStatus.setText(orderStatus);
+                        TvAmount.setText("$"+orderCost+"[Including delivery fee $"+deliveryFee+"]");
                         try {
                             Calendar calendar=Calendar.getInstance();
                             calendar.setTimeInMillis(Long.parseLong(orderTime));
@@ -136,9 +139,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                        else if(orderStatus.equals("Cancelled")){
                             TvOrderStatus.setTextColor(getResources().getColor(R.color.red));
                         }
-                       TvOrderId.setText(orderId);
-                       TvOrderStatus.setText(orderStatus);
-                       TvAmount.setText("$"+orderCost+"[Including delivery fee $"+deliveryFee+"]");
+
 
 
                        findAdress(latitude,longitude);
@@ -162,7 +163,6 @@ public class OrderDetailActivity extends AppCompatActivity {
 
             Geocoder geocoder;
             List<Address> addresses;
-            Context context;
             geocoder=new Geocoder(this, Locale.getDefault());
             addresses=geocoder.getFromLocation(lat,lon,1);
             String address=addresses.get(0).getAddressLine(0);

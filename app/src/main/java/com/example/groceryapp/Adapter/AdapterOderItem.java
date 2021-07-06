@@ -43,8 +43,8 @@ public class AdapterOderItem extends RecyclerView.Adapter<AdapterOderItem.Holder
 
         //set data
         holder.TvTittleItem.setText(name);
-        holder.TvPriceItem.setText("$"+cost);
-        holder.TvTittleItem.setText("$"+price);
+        holder.TvItemPriceEach.setText("$"+cost);
+        holder.TvPriceItem.setText("$"+price);
         holder.tvItemQuantity.setText("["+quantity+"]");
     }
 
