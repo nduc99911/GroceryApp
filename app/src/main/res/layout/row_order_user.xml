@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:contentPadding="5dp"
+    app:cardUseCompatPadding="true"
+    app:cardElevation="3dp"
+    app:cardCornerRadius="5dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+<TextView
+    android:id="@+id/TvOderId"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Order:12345"
+    android:textColor="@color/black"
+    android:textStyle="bold"/>
+
+
+        <TextView
+            android:id="@+id/TvDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           android:layout_toStartOf="@id/IvNext"
+            android:text="06/07/2021"
+      />
+
+        <TextView
+            android:id="@+id/TvShopName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/TvOderId"
+            android:text="ABC Shop"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/TvAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/TvShopName"
+            android:text="Total Amount: $32.44" />
+
+        <TextView
+            android:id="@+id/TvStatus"
+            android:textColor="@color/colorGreen"
+            android:layout_marginTop="5dp"
+            android:layout_toStartOf="@id/IvNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/TvShopName"
+            android:text="In Process" />
+
+        <ImageView
+            android:id="@+id/IvNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_navigate_next_24"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"/>
+
+
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,6 +32,9 @@ import com.example.groceryapp.Model.ModelCartItem;
 import com.example.groceryapp.Model.ModelProduct;
 import com.example.groceryapp.Model.ModelShop;
 import com.example.groceryapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +44,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
@@ -52,10 +57,12 @@ EditText EdsearchProduct;
 RecyclerView RvProduct;
 private String shopUid;
 
+private ProgressDialog progressDialog;
 private FirebaseAuth firebaseAuth;
-String myLatitude,myLongtidude;
+String myLatitude,myLongtidude,myPhone;
 String shopName,shopEmail,shopPhone,shopAddress,shopLatitude,shopLongtidude;
 public String deliveryFee;
+
 private ArrayList<ModelProduct> list;
 private AdapterProductUsers adapterProductUsers;
 
@@ -84,6 +91,10 @@ private AdapterProductUsers adapterProductUsers;
 
         RvProduct=findViewById(R.id.RvProduct);
 
+        Context context;
+        progressDialog=new ProgressDialog(this);
+        progressDialog.setTitle("Please wait");
+        progressDialog.setCanceledOnTouchOutside(false);
 
         //get uid shop
         shopUid=getIntent().getStringExtra("shopUid");
@@ -191,6 +202,26 @@ private AdapterProductUsers adapterProductUsers;
          btnCheckout=view.findViewById(R.id.btnCheckout);
         RecyclerView RvcartItem=view.findViewById(R.id.RvcartItem);
 
+
+        //place order
+        btnCheckout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(myLatitude.equals("") || myLongtidude.equals("") || myLongtidude.equals("null") || myLongtidude.equals("null")){
+                    Toast.makeText(ShopDetailActivity.this,"Please enter your address in you profile before pacing order...",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(myPhone.equals("") || myPhone.equals("null") ){
+                    Toast.makeText(ShopDetailActivity.this,"Please enter your phone in you profile before pacing order...",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(cartItems.size()==0){
+                    Toast.makeText(ShopDetailActivity.this,"No item in cart...",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                sumbitOrder();
+            }
+        });
         //alert dialog
         AlertDialog.Builder builder=new AlertDialog.Builder(this);
         //set view to dialog
@@ -242,6 +273,7 @@ private AdapterProductUsers adapterProductUsers;
                 allTotalPrice=0.00;
             }
         });
+
 
 
 
@@ -306,8 +338,63 @@ private AdapterProductUsers adapterProductUsers;
         });
 
 
+
     }
 
+    private void sumbitOrder() {
+        progressDialog.setMessage("Placing order...");
+        progressDialog.show();
+
+        String timestamp = "" + System.currentTimeMillis();
+
+        String cost = TvTotal.getText().toString().trim().replace("$", "");
+
+        //set up order data
+        HashMap<String,String> hashMap=new HashMap<>();
+        hashMap.put("orderId",""+timestamp);
+        hashMap.put("orderTime",""+timestamp);
+        hashMap.put("orderStatus","In Progress");//In progress/complete/cancelled
+        hashMap.put("orderCost",""+cost);
+        hashMap.put("orderBy",""+firebaseAuth.getUid());
+        hashMap.put("orderTo",""+shopUid);
+
+        //add to db
+        final DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Users").child(shopUid).child("Orders");
+        reference.child(timestamp).setValue(hashMap)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete( Task<Void> task) {
+                        for(int i=0;i<cartItems.size();i++){
+                            String pid=cartItems.get(i).getPid();
+                            String id=cartItems.get(i).getId();
+                            String name=cartItems.get(i).getName();
+                            String cost=cartItems.get(i).getCost();
+                            String price=cartItems.get(i).getPrice();
+                            String quantity=cartItems.get(i).getQuantity();
+
+                            HashMap<String,String> hashMap11=new HashMap<>();
+                            hashMap11.put("pid",pid);
+                            hashMap11.put("name",name);
+                            hashMap11.put("cost",cost);//In progress/complete/cancelled
+                            hashMap11.put("price",price);
+                            hashMap11.put("quantity",quantity);
+
+                            reference.child(timestamp).child("items").child(pid).setValue(hashMap11);
+
+                        }
+                        progressDialog.dismiss();
+                        Toast.makeText(ShopDetailActivity.this,"Oeder Sucesssfully...",Toast.LENGTH_LONG).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure( Exception e) {
+                        progressDialog.dismiss();
+                        Toast.makeText(ShopDetailActivity.this,""+e.getMessage(),Toast.LENGTH_LONG).show();
+                    }
+                });
+
+    }
     private void loadMyInfo() {
         DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users");
         reference.orderByChild("uid").equalTo(firebaseAuth.getUid())
@@ -318,7 +405,7 @@ private AdapterProductUsers adapterProductUsers;
                             //get user data
                             String name=""+s.child("name").getValue();
                             String email=""+s.child("email").getValue();
-                            String phone=""+s.child("phone").getValue();
+                            myPhone=""+s.child("phone").getValue();
                             String city=""+s.child("city").getValue();
                             String profileImage=""+s.child("profileImage").getValue();
                             String accountType=""+s.child("accountType").getValue();

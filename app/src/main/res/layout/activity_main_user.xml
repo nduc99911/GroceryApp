@@ -100,6 +100,7 @@
 <!--    Shop UI-->
     <RelativeLayout
         android:id="@+id/RlShop"
+        android:visibility="gone"
         android:layout_below="@+id/Rltoolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -118,5 +119,16 @@
         android:layout_below="@+id/Rltoolbar"
         android:id="@+id/RlOrder"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+
+       <androidx.recyclerview.widget.RecyclerView
+           android:id="@+id/RvOder"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           tools:listitem="@layout/row_order_user"
+           app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+           />
+
+    </RelativeLayout>
+
 </RelativeLayout>

@@ -1,18 +1,18 @@
 package com.example.groceryapp.Model;
 
 public class ModelCartItem {
-    String id,Pid,name,price,cost,quantity;
-
-    public ModelCartItem() {
-    }
+    String id,pid,name,price,cost,quantity;
 
     public ModelCartItem(String id, String pid, String name, String price, String cost, String quantity) {
         this.id = id;
-        Pid = pid;
+        this.pid = pid;
         this.name = name;
         this.price = price;
         this.cost = cost;
         this.quantity = quantity;
+    }
+
+    public ModelCartItem() {
     }
 
     public String getId() {
@@ -24,11 +24,11 @@ public class ModelCartItem {
     }
 
     public String getPid() {
-        return Pid;
+        return pid;
     }
 
     public void setPid(String pid) {
-        Pid = pid;
+        this.pid = pid;
     }
 
     public String getName() {
