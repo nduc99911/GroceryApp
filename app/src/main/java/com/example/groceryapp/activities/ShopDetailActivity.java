@@ -51,7 +51,7 @@ import p32929.androideasysql_library.EasyDB;
 
 public class ShopDetailActivity extends AppCompatActivity {
 ImageView ImShop;
-TextView TvShopName,TvPhone,TvEmail,TvOpenClose,TvDelivery,TvAdress,TvFilterProduct;
+TextView TvShopName,TvPhone,TvEmail,TvOpenClose,TvDelivery,TvAdress,TvFilterProduct,TvCartCount;
 ImageButton btnCall,btnMaps,btnCart,btnFilter;
 EditText EdsearchProduct;
 RecyclerView RvProduct;
@@ -69,6 +69,8 @@ private AdapterProductUsers adapterProductUsers;
 //cart
     private ArrayList<ModelCartItem> cartItems;
     private AdpaterCartItem adpaterCartItem;
+
+    private EasyDB easyDB;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +83,8 @@ private AdapterProductUsers adapterProductUsers;
         TvDelivery=findViewById(R.id.TvDelivery);
         TvAdress=findViewById(R.id.TvAdress);
         TvFilterProduct=findViewById(R.id.TvFilterProduct);
+        TvCartCount=findViewById(R.id.TvCartCount);
+
 
         btnCall=findViewById(R.id.btnCall);
         btnMaps=findViewById(R.id.btnMaps);
@@ -102,7 +106,20 @@ private AdapterProductUsers adapterProductUsers;
         loadMyInfo();
         loadShopDetails();
         loadShopProducts();
+
+
+         easyDB=EasyDB.init(this,"ITEMS_DB")
+                .setTableName("ITEMS_TABLE")
+                .addColumn(new Column("Item_Id",new String[]{"text","unique"}))
+                .addColumn(new Column("Item_PID",new String[]{"text","not null"}))
+                .addColumn(new Column("Item_Name",new String[]{"text","not null"}))
+                .addColumn(new Column("Item_Price_Each",new String[]{"text","not null"}))
+                .addColumn(new Column("Item_Price",new String[]{"text","not null"}))
+                .addColumn(new Column("Item_Quantity",new String[]{"text","not null"}))
+                .doneTableColumn();
+
         deleteCart();
+        cartCount();
         //search
         EdsearchProduct.addTextChangedListener(new TextWatcher() {
             @Override
@@ -174,18 +191,23 @@ private AdapterProductUsers adapterProductUsers;
     }
 
     private void deleteCart() {
-        EasyDB easyDB=EasyDB.init(this,"ITEMS_DB")
-                .setTableName("ITEMS_TABLE")
-                .addColumn(new Column("Item_Id",new String[]{"text","unique"}))
-                .addColumn(new Column("Item_PID",new String[]{"text","not null"}))
-                .addColumn(new Column("Item_Name",new String[]{"text","not null"}))
-                .addColumn(new Column("Item_Price_Each",new String[]{"text","not null"}))
-                .addColumn(new Column("Item_Price",new String[]{"text","not null"}))
-                .addColumn(new Column("Item_Quantity",new String[]{"text","not null"}))
-                .doneTableColumn();
+
         easyDB.deleteAllDataFromTable();//delete all recoeds from cart
     }
 
+    public void cartCount(){
+        //keep it public so we can access in dapter
+        int count=easyDB.getAllData().getCount();
+        if(count<=0){
+            //no item in cart,hide cart count text view
+            TvCartCount.setVisibility(View.GONE);
+        }
+        else {
+            //have item in cart,hide cart count text view
+            TvCartCount.setVisibility(View.VISIBLE);
+            TvCartCount.setText(""+count);
+        }
+    }
 
     public double allTotalPrice=0.00;
     public TextView TvdTotal,TvdFee,TvTotal,btnCheckout;
@@ -357,6 +379,8 @@ private AdapterProductUsers adapterProductUsers;
         hashMap.put("orderCost",""+cost);
         hashMap.put("orderBy",""+firebaseAuth.getUid());
         hashMap.put("orderTo",""+shopUid);
+        hashMap.put("latitude",""+myLatitude);
+        hashMap.put("longitude",""+myLongtidude);
 
         //add to db
         final DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Users").child(shopUid).child("Orders");
@@ -384,6 +408,10 @@ private AdapterProductUsers adapterProductUsers;
                         }
                         progressDialog.dismiss();
                         Toast.makeText(ShopDetailActivity.this,"Oeder Sucesssfully...",Toast.LENGTH_LONG).show();
+                        Intent intent=new Intent(ShopDetailActivity.this, OrderDetailActivity.class);
+                        intent.putExtra("orderTo",shopUid);
+                        intent.putExtra("orderId",timestamp);
+                        startActivity(intent);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

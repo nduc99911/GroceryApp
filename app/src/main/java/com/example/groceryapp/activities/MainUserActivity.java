@@ -127,11 +127,11 @@ private RecyclerView RvShops,RvOder;
         RlShop.setVisibility(View.VISIBLE);
         RlOrder.setVisibility(View.GONE);
 
-        tabShop.setTextColor(getResources().getColor(R.color.black));
-        tabShop.setBackgroundResource(R.drawable.shape_rect04);
+        tabShop.setTextColor(getResources().getColor(R.color.white));
+        tabShop.setBackgroundResource(R.drawable.shape_rect10);
 
         tabOrders.setTextColor(getResources().getColor(R.color.white));
-        tabShop.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+        tabOrders.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 
     }
 
@@ -143,7 +143,7 @@ private RecyclerView RvShops,RvOder;
         tabShop.setBackgroundColor(getResources().getColor(android.R.color.transparent));
 
         tabOrders.setTextColor(getResources().getColor(R.color.white));
-        tabShop.setBackgroundResource(R.drawable.shape_rect04);
+        tabOrders.setBackgroundResource(R.drawable.shape_rect10);
 
     }
 

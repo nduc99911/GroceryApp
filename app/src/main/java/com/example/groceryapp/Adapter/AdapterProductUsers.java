@@ -22,6 +22,7 @@ import com.example.groceryapp.FilterProduct;
 import com.example.groceryapp.FilterProductUser;
 import com.example.groceryapp.Model.ModelProduct;
 import com.example.groceryapp.R;
+import com.example.groceryapp.activities.ShopDetailActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -232,7 +233,10 @@ private int quantity=0;
                 .addData("Item_Quantity",quantity)
                 .doneDataAdding();
         Toast.makeText(context,"Added to cart...",Toast.LENGTH_LONG).show();
+        //update cart count
+        ((ShopDetailActivity)context).cartCount();
     }
+
 
 
     @Override

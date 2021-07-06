@@ -84,6 +84,9 @@ public class AdpaterCartItem extends RecyclerView.Adapter<AdpaterCartItem.Holder
                 ((ShopDetailActivity)context).allTotalPrice=0.00;
                 ((ShopDetailActivity)context).TvdTotal.setText("$"+String.format("%.2f",sTotalPrice));
                 ((ShopDetailActivity)context).TvTotal.setText("$"+String.format("%.2f",Double.parseDouble(String.format("%.2f",totalPrice))));
+
+                //after removing item from car,update cart count
+                ((ShopDetailActivity)context).cartCount();
             }
         });
 

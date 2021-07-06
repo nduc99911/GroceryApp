@@ -1,9 +1,11 @@
 package com.example.groceryapp.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.groceryapp.Model.ModelCartItem;
 import com.example.groceryapp.Model.ModelOrderUser;
 import com.example.groceryapp.R;
+import com.example.groceryapp.activities.OrderDetailActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -77,6 +80,15 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hord
 
         holder.TvDate.setText(formatDate);
 
+        holder.IvNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(context, OrderDetailActivity.class);
+                intent.putExtra("orderTo",orderTo);
+                intent.putExtra("orderId",orderId);
+                context.startActivity(intent);
+            }
+        });
     }
 
     private void loadShopInfo(ModelOrderUser modelOrderUser, HorderOrderUser holder) {
@@ -104,7 +116,7 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hord
 
     class HorderOrderUser extends RecyclerView.ViewHolder{
        private TextView TvOderId,TvDate,TvShopName,TvAmount,TvStatus;
-
+        private ImageButton IvNext;
         public HorderOrderUser( View itemView) {
             super(itemView);
             TvOderId=itemView.findViewById(R.id.TvOderId);
@@ -112,7 +124,7 @@ public class AdapterOrderUser extends RecyclerView.Adapter<AdapterOrderUser.Hord
             TvShopName=itemView.findViewById(R.id.TvShopName);
             TvAmount=itemView.findViewById(R.id.TvAmount);
             TvStatus=itemView.findViewById(R.id.TvStatus);
-            TvOderId=itemView.findViewById(R.id.TvOderId);
+            IvNext=itemView.findViewById(R.id.IvNext);
 
 
         }
