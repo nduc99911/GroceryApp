@@ -1,5 +1,6 @@
 package com.example.groceryapp.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,8 +20,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.groceryapp.Adapter.AdapterOrderShop;
+import com.example.groceryapp.Adapter.AdapterOrderUser;
 import com.example.groceryapp.Adapter.AdapterProductSeller;
 import com.example.groceryapp.Constants;
+import com.example.groceryapp.Model.ModelOrderSeller;
 import com.example.groceryapp.Model.ModelProduct;
 import com.example.groceryapp.ProfileEditDSellerActivity;
 import com.example.groceryapp.R;
@@ -38,17 +42,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainSellerActivity extends AppCompatActivity {
-private TextView tvName,tvShopName,tvEmail,tabProduct,tabOrders,tvFilterProduct;
-private ImageButton btnLogout,btnedit,btnaddProduct,btnFilterproduct;
+private TextView tvName,tvShopName,tvEmail,tabProduct,tabOrders,tvFilterProduct,TvFilterOrder;
+private ImageButton btnLogout,btnedit,btnaddProduct,btnFilterproduct,BtnFilterOrder;
 private ImageView imageView;
 private RelativeLayout RlProduct,RlOrders;
 private EditText edFilterProduct;
 private FirebaseAuth firebaseAuth;
 private ProgressDialog progressDialog;
-private RecyclerView recyclerView;
+private RecyclerView recyclerView,RvOrder;
 
 private ArrayList<ModelProduct> productList;
 private AdapterProductSeller adapterProductSeller;
+
+    private ArrayList<ModelOrderSeller> listorder;
+    private AdapterOrderShop adapterOrderShop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,13 +65,16 @@ private AdapterProductSeller adapterProductSeller;
         tvEmail=findViewById(R.id.tvEmail);
         tvFilterProduct=findViewById(R.id.TvFilterProduct);
         edFilterProduct=findViewById(R.id.EdsearchProduct);
+        TvFilterOrder=findViewById(R.id.TvFilterOrder);
         tabProduct=findViewById(R.id.tabProduct);
         tabOrders=findViewById(R.id.tabOrders);
         btnaddProduct=findViewById(R.id.btnaddProduct);
         btnFilterproduct=findViewById(R.id.Btnfilterproduct);
+        BtnFilterOrder=findViewById(R.id.BtnFilterOrder);
         imageView=findViewById(R.id.profileIv);
         RlProduct=findViewById(R.id.RlProduct);
         RlOrders=findViewById(R.id.RlOrders);
+        RvOrder=findViewById(R.id.RvOrder);
 
         recyclerView=findViewById(R.id.RVprduct);
         btnLogout=findViewById(R.id.btnlogout);
@@ -78,6 +88,7 @@ private AdapterProductSeller adapterProductSeller;
         checkUser();
         loadAllProduct();
         showProductsUI();
+        loadAllOrders();
         //search
         edFilterProduct.addTextChangedListener(new TextWatcher() {
             @Override
@@ -162,6 +173,56 @@ private AdapterProductSeller adapterProductSeller;
                         }).show();
             }
         });
+        BtnFilterOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String [] options={"All","In Progress","Cancelled"};
+
+                Context context;
+                AlertDialog.Builder builder=new AlertDialog.Builder(MainSellerActivity.this);
+                builder.setTitle("Filter Orders:")
+                        .setItems(options, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(which==0){
+                                    TvFilterOrder.setText("Showing All Orders");
+                                    adapterOrderShop.getFilter().filter("");
+                                }
+                                else {
+                                    String optonClicked=options[which];
+                                    TvFilterOrder.setText("Showing "+optonClicked+"Orders");
+                                    adapterOrderShop.getFilter().filter(optonClicked);
+
+                                }
+                            }
+                        }).show();
+            }
+        });
+    }
+
+    private void loadAllOrders() {
+        listorder=new ArrayList<>();
+
+        //load orders of shop
+        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Users");
+        reference.child(firebaseAuth.getUid()).child("Orders")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange( DataSnapshot snapshot) {
+                        listorder.clear();
+                        for(DataSnapshot s:snapshot.getChildren()){
+                            ModelOrderSeller seller=s.getValue(ModelOrderSeller.class);
+                            listorder.add(seller);
+                        }
+                        adapterOrderShop=new AdapterOrderShop(MainSellerActivity.this,listorder);
+                        RvOrder.setAdapter(adapterOrderShop);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError error) {
+
+                    }
+                });
     }
 
     private void lodaFilterProduct(String seleced) {
@@ -240,8 +301,8 @@ private AdapterProductSeller adapterProductSeller;
 
     private void showOrdersUI() {
         //show Orders UI
-        RlProduct.setVisibility(View.VISIBLE);
-        RlOrders.setVisibility(View.GONE);
+        RlProduct.setVisibility(View.GONE);
+        RlOrders.setVisibility(View.VISIBLE);
 
         tabProduct.setTextColor(getResources().getColor(R.color.white));
         tabProduct.setBackgroundColor(getResources().getColor(android.R.color.transparent));

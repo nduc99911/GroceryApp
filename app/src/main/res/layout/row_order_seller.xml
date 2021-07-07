@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="2dp"
+    app:cardElevation="3dp"
+    app:contentPadding="5dp"
+    app:cardBackgroundColor="@color/white"
+    >
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/TvOrderId"
+        android:text="121212"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/TvDateOrder"
+        android:text="dd/MM/yyyy"
+        android:layout_toStartOf="@+id/IvNext"
+        android:textColor="@color/colorGray02"
+       />
+
+<!--    email of user who placed order-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/TvEmail"
+        android:text="Email"
+        android:layout_below="@id/TvOrderId"
+        android:textColor="@color/colorGray02"
+        />
+<!--total Amount of the order-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/TvAmount"
+        android:text="Total Amount: $32.33"
+        android:layout_below="@+id/TvEmail"
+        android:textColor="@color/colorGray02"
+        />
+<!--Order Status-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/TvStatus"
+        android:text="In Process"
+        android:layout_below="@+id/TvEmail"
+        android:layout_toStartOf="@+id/IvNext"
+        android:textColor="@color/colorGreen"
+        />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/IvNext"
+        android:src="@drawable/ic_baseline_navigate_next_24"
+        android:textColor="@color/black"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        />
+</RelativeLayout>
+</androidx.cardview.widget.CardView>

@@ -103,7 +103,9 @@
 
         </LinearLayout>
     </RelativeLayout>
+
     <RelativeLayout
+
         android:id="@+id/RlProduct"
         android:layout_below="@+id/Rltoolbar"
         android:layout_width="match_parent"
@@ -122,6 +124,7 @@
         
 <!--        filter-->
         <ImageButton
+
             android:src="@drawable/ic_baseline_dashboard_24"
             android:background="@null"
             android:layout_marginEnd="5dp"
@@ -152,15 +155,49 @@
             tools:listitem="@layout/row_product_seller"
 
             />
+    </RelativeLayout>
 
         <RelativeLayout
-
+            android:layout_below="@+id/Rltoolbar"
             android:id="@+id/RlOrders"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="0dp">
 
+            <TextView
+                android:id="@+id/TvFilterOrder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/shape_recy02"
+                android:padding="10dp"
+                android:text="Showing All Orders"/>
+<!--filter-->
+            <ImageButton
+                android:src="@drawable/ic_baseline_dashboard_24"
+                android:background="@null"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_alignParentEnd="true"
+                android:id="@+id/BtnFilterOrder"
+                android:layout_width="45dp"
+                android:layout_height="45dp"></ImageButton>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/TvFilterOrder"
+                android:id="@+id/RvOrder"
+                app:reverseLayout="true"
+                app:stackFromEnd="true"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/row_order_seller"
+
+                />
         </RelativeLayout>
-    </RelativeLayout>
+
+
+
 
 </RelativeLayout>
