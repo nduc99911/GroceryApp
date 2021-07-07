@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GroceryApp"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.OrderDetailActivity"></activity>
+        <activity android:name=".activities.OrderDetailSellerActivity"></activity>
+        <activity android:name=".activities.OrderDetailActivity" />
         <activity
             android:name=".activities.ShopDetailActivity"
             android:windowSoftInputMode="stateHidden" />

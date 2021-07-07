@@ -1,6 +1,7 @@
 package com.example.groceryapp.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.example.groceryapp.FilterOrders;
 import com.example.groceryapp.Model.ModelOrderItem;
 import com.example.groceryapp.Model.ModelOrderSeller;
 import com.example.groceryapp.R;
+import com.example.groceryapp.activities.OrderDetailSellerActivity;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -83,7 +85,10 @@ public class AdapterOrderShop extends RecyclerView.Adapter<AdapterOrderShop.Hode
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent=new Intent(context, OrderDetailSellerActivity.class);
+                intent.putExtra("orderId",orderId);
+                intent.putExtra("orderBy",orderBy);
+                context.startActivity(intent);
             }
         });
     }
