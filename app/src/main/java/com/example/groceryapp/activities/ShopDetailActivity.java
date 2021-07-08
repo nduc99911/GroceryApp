@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -25,6 +26,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.groceryapp.Adapter.AdapterProductUsers;
 import com.example.groceryapp.Adapter.AdpaterCartItem;
 import com.example.groceryapp.Constants;
@@ -34,6 +40,7 @@ import com.example.groceryapp.Model.ModelShop;
 import com.example.groceryapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -41,10 +48,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import p32929.androideasysql_library.Column;
 import p32929.androideasysql_library.EasyDB;
@@ -385,9 +396,9 @@ private AdapterProductUsers adapterProductUsers;
         //add to db
         final DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Users").child(shopUid).child("Orders");
         reference.child(timestamp).setValue(hashMap)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onComplete( Task<Void> task) {
+                    public void onSuccess(Void unused) {
                         for(int i=0;i<cartItems.size();i++){
                             String pid=cartItems.get(i).getPid();
                             String id=cartItems.get(i).getId();
@@ -408,10 +419,10 @@ private AdapterProductUsers adapterProductUsers;
                         }
                         progressDialog.dismiss();
                         Toast.makeText(ShopDetailActivity.this,"Oeder Sucesssfully...",Toast.LENGTH_LONG).show();
-                        Intent intent=new Intent(ShopDetailActivity.this, OrderDetailActivity.class);
-                        intent.putExtra("orderTo",shopUid);
-                        intent.putExtra("orderId",timestamp);
-                        startActivity(intent);
+
+                        prepareNotificationMesseage(timestamp);
+
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -474,6 +485,61 @@ private AdapterProductUsers adapterProductUsers;
 
                     }
                 });
+    }
+
+    private void prepareNotificationMesseage(String orderId){
+        String NOTIFICATION_TOPIC="/topics/"+Constants.FCM_TOPIC;
+        String NOTIFICATION_TITLE="New Order"+orderId;
+        String NOTIFICATION_MESSAGE="Congratulations...!You have new order.";
+        String NOTIFICATION_TYPE="NewOrder";
+
+        JSONObject notificationJo=new JSONObject();
+        JSONObject notificationBodyJo=new JSONObject();
+        try {
+            notificationBodyJo.put("notificationType",NOTIFICATION_TYPE);
+            notificationBodyJo.put("buyerUid",firebaseAuth.getUid());
+            notificationBodyJo.put("sellerUid",shopUid);
+            notificationBodyJo.put("orderId",orderId);
+            notificationBodyJo.put("notificationTitle",NOTIFICATION_TITLE);
+            notificationBodyJo.put("notificationMessage",NOTIFICATION_MESSAGE);
+
+            notificationJo.put("to",NOTIFICATION_TOPIC);
+            notificationJo.put("data",notificationBodyJo);
+        }catch (Exception e){
+            Toast.makeText(ShopDetailActivity.this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+        semdFcmNotifications(notificationJo,orderId);
+    }
+
+    private void semdFcmNotifications(JSONObject notificationJo, String orderId) {
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest("https://fcm:googleapis.com/fcm/send", notificationJo, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Intent intent=new Intent(ShopDetailActivity.this, OrderDetailActivity.class);
+                intent.putExtra("orderTo",shopUid);
+                intent.putExtra("orderId",orderId);
+                startActivity(intent);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Intent intent=new Intent(ShopDetailActivity.this, OrderDetailActivity.class);
+                intent.putExtra("orderTo",shopUid);
+                intent.putExtra("orderId",orderId);
+                startActivity(intent);
+            }
+        }){
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers=new HashMap<>();
+                headers.put("Content-Type","application/json");
+                headers.put("Authorization","key="+ Constants.FCM_KEY);
+
+                return headers;
+            }
+        };
+        Volley.newRequestQueue(this).add(jsonObjectRequest);
     }
 
 }

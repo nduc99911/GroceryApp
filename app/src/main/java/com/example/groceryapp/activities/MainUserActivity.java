@@ -36,7 +36,7 @@ import java.util.HashMap;
 
 public class MainUserActivity extends AppCompatActivity {
 private TextView tvName,tvEmail,tvPhone,tabShop,tabOrders;
-private ImageButton btnLogout,btnEdit;
+private ImageButton btnLogout,btnEdit,btnSetting;
 private ImageView profileIv;
 private RelativeLayout RlShop,RlOrder;
 private RecyclerView RvShops,RvOder;
@@ -59,6 +59,7 @@ private RecyclerView RvShops,RvOder;
         tabOrders=findViewById(R.id.tabOrders);
         btnLogout=findViewById(R.id.btnlogout);
         btnEdit=findViewById(R.id.btnEditProfile);
+         btnSetting=findViewById(R.id.btnSetting);
         profileIv=findViewById(R.id.profileIv);
         RlShop=findViewById(R.id.RlShop);
         RlOrder=findViewById(R.id.RlOrder);
@@ -107,6 +108,14 @@ private RecyclerView RvShops,RvOder;
                 finish();
             }
         });
+        //seting
+         btnSetting.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+                 Intent intent=new Intent(MainUserActivity.this,SettingsActivity.class);
+                 startActivity(intent);
+             }
+         });
 
         tabShop.setOnClickListener(new View.OnClickListener() {
             @Override

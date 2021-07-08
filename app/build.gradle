@@ -39,6 +39,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-database:20.0.0'
     implementation 'com.google.firebase:firebase-firestore:23.0.1'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.google.firebase:firebase-messaging:22.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -53,6 +54,8 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.2.1"
 
     implementation 'com.github.p32929:AndroidEasySQL-Library:1.4.1'
+
+    implementation 'com.android.volley:volley:1.1.1'
 }
 
 

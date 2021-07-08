@@ -28,7 +28,14 @@
             android:layout_toStartOf="@id/btnlogout"
             android:src="@drawable/ic_baseline_edit_24" />
 
-
+        <ImageButton
+            android:id="@+id/btnSetting"
+            android:layout_width="30dp"
+            android:layout_marginEnd="8dp"
+            android:layout_height="30dp"
+            android:background="@null"
+            android:layout_toStartOf="@id/btnEditProfile"
+            android:src="@drawable/ic_baseline_settings_24" />
         <com.blogspot.atifsoftwares.circularimageview.CircularImageView
             android:layout_width="70dp"
             android:layout_height="70dp"

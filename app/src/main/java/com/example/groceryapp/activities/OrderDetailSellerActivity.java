@@ -18,7 +18,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.groceryapp.Adapter.AdapterOderItem;
+import com.example.groceryapp.Constants;
 import com.example.groceryapp.Model.ModelOrderItem;
 import com.example.groceryapp.R;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -30,11 +36,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class OrderDetailSellerActivity extends AppCompatActivity {
 private ImageButton btnBack,btnEdit,btnMaps;
@@ -119,7 +128,10 @@ private AdapterOderItem adapterOderItem;
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
-                        Toast.makeText(OrderDetailSellerActivity.this,"Order is now"+selected,Toast.LENGTH_LONG).show();
+                        String message="Order is now"+selected;
+                        Toast.makeText(OrderDetailSellerActivity.this,message,Toast.LENGTH_LONG).show();
+
+                        prepareNotificationMesseage(orderId,message);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -272,5 +284,54 @@ private AdapterOderItem adapterOderItem;
 
                     }
                 });
+    }
+
+    private void prepareNotificationMesseage(String orderId,String message){
+        String NOTIFICATION_TOPIC="/topics/"+ Constants.FCM_TOPIC;
+        String NOTIFICATION_TITLE="Your Order"+orderId;
+        String NOTIFICATION_MESSAGE=""+message;
+        String NOTIFICATION_TYPE="OrderStatusChanged";
+
+        JSONObject notificationJo=new JSONObject();
+        JSONObject notificationBodyJo=new JSONObject();
+        try {
+            notificationBodyJo.put("notificationType",NOTIFICATION_TYPE);
+            notificationBodyJo.put("buyerUid",orderBy);
+            notificationBodyJo.put("sellerUid",firebaseAuth.getUid());
+            notificationBodyJo.put("orderId",orderId);
+            notificationBodyJo.put("notificationTitle",NOTIFICATION_TITLE);
+            notificationBodyJo.put("notificationMessage",NOTIFICATION_MESSAGE);
+
+            notificationJo.put("to",NOTIFICATION_TOPIC);
+            notificationJo.put("data",notificationBodyJo);
+        }catch (Exception e){
+            Toast.makeText(this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+        semdFcmNotifications(notificationJo);
+    }
+
+    private void semdFcmNotifications(JSONObject notificationJo) {
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest("https://fcm:googleapis.com/fcm/send", notificationJo, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers=new HashMap<>();
+                headers.put("Content-Type","application/json");
+                headers.put("Authorization","key="+ Constants.FCM_KEY);
+
+                return headers;
+            }
+        };
+        Volley.newRequestQueue(this).add(jsonObjectRequest);
     }
 }

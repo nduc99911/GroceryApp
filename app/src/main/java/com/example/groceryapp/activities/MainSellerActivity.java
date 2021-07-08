@@ -43,7 +43,7 @@ import java.util.HashMap;
 
 public class MainSellerActivity extends AppCompatActivity {
 private TextView tvName,tvShopName,tvEmail,tabProduct,tabOrders,tvFilterProduct,TvFilterOrder;
-private ImageButton btnLogout,btnedit,btnaddProduct,btnFilterproduct,BtnFilterOrder;
+private ImageButton btnLogout,btnedit,btnaddProduct,btnFilterproduct,BtnFilterOrder,btnSetting;
 private ImageView imageView;
 private RelativeLayout RlProduct,RlOrders;
 private EditText edFilterProduct;
@@ -70,6 +70,7 @@ private AdapterProductSeller adapterProductSeller;
         tabOrders=findViewById(R.id.tabOrders);
         btnaddProduct=findViewById(R.id.btnaddProduct);
         btnFilterproduct=findViewById(R.id.Btnfilterproduct);
+        btnSetting=findViewById(R.id.btnSetting);
         BtnFilterOrder=findViewById(R.id.BtnFilterOrder);
         imageView=findViewById(R.id.profileIv);
         RlProduct=findViewById(R.id.RlProduct);
@@ -136,6 +137,16 @@ private AdapterProductSeller adapterProductSeller;
                 startActivity(intent);
             }
         });
+
+        //setting
+        btnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(MainSellerActivity.this,SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
+
         tabProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
