@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,10 +34,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.groceryapp.Adapter.AdapterProductUsers;
+import com.example.groceryapp.Adapter.AdapterReview;
 import com.example.groceryapp.Adapter.AdpaterCartItem;
 import com.example.groceryapp.Constants;
 import com.example.groceryapp.Model.ModelCartItem;
 import com.example.groceryapp.Model.ModelProduct;
+import com.example.groceryapp.Model.ModelReview;
 import com.example.groceryapp.Model.ModelShop;
 import com.example.groceryapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -63,7 +67,7 @@ import p32929.androideasysql_library.EasyDB;
 public class ShopDetailActivity extends AppCompatActivity {
 ImageView ImShop;
 TextView TvShopName,TvPhone,TvEmail,TvOpenClose,TvDelivery,TvAdress,TvFilterProduct,TvCartCount;
-ImageButton btnCall,btnMaps,btnCart,btnFilter;
+ImageButton btnCall,btnMaps,btnCart,btnFilter,btnShowReview;
 EditText EdsearchProduct;
 RecyclerView RvProduct;
 private String shopUid;
@@ -72,6 +76,7 @@ private ProgressDialog progressDialog;
 private FirebaseAuth firebaseAuth;
 String myLatitude,myLongtidude,myPhone;
 String shopName,shopEmail,shopPhone,shopAddress,shopLatitude,shopLongtidude;
+private RatingBar RatingBar;
 public String deliveryFee;
 
 private ArrayList<ModelProduct> list;
@@ -95,12 +100,13 @@ private AdapterProductUsers adapterProductUsers;
         TvAdress=findViewById(R.id.TvAdress);
         TvFilterProduct=findViewById(R.id.TvFilterProduct);
         TvCartCount=findViewById(R.id.TvCartCount);
-
+        RatingBar=findViewById(R.id.RatingBar);
 
         btnCall=findViewById(R.id.btnCall);
         btnMaps=findViewById(R.id.btnMaps);
         btnCart=findViewById(R.id.btnCart);
         btnFilter=findViewById(R.id.btnFilter);
+        btnShowReview=findViewById(R.id.btnShowReview);
 
         EdsearchProduct=findViewById(R.id.EdsearchProduct);
 
@@ -117,7 +123,7 @@ private AdapterProductUsers adapterProductUsers;
         loadMyInfo();
         loadShopDetails();
         loadShopProducts();
-
+        loadReviews();
 
          easyDB=EasyDB.init(this,"ITEMS_DB")
                 .setTableName("ITEMS_TABLE")
@@ -199,6 +205,41 @@ private AdapterProductUsers adapterProductUsers;
                 openMap();
             }
         });
+
+        //open reviews activity
+        btnShowReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(ShopDetailActivity.this,ShopReviewActivity.class);
+               intent.putExtra("shopUid",shopUid);
+                startActivity(intent);
+            }
+        });
+    }
+
+
+    private float ratingSum=0;
+    private void loadReviews() {
+
+        DatabaseReference reference=FirebaseDatabase.getInstance().getReference("Users");
+        reference.child(shopUid).child("Ratings")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange( DataSnapshot snapshot) {
+                        ratingSum=0;
+                        for(DataSnapshot s:snapshot.getChildren()){
+                            float rating=Float.parseFloat(""+s.child("ratings").getValue());
+                            ratingSum=ratingSum+rating;
+                        }
+                        long numberofReviews=snapshot.getChildrenCount();
+                        float avgratings=ratingSum/numberofReviews;
+
+                        RatingBar.setRating(avgratings);
+                    }
+                    @Override
+                    public void onCancelled( DatabaseError error) {
+                    }
+                });
     }
 
     private void deleteCart() {
@@ -505,14 +546,16 @@ private AdapterProductUsers adapterProductUsers;
 
             notificationJo.put("to",NOTIFICATION_TOPIC);
             notificationJo.put("data",notificationBodyJo);
+
+            semdFcmNotifications(notificationJo,orderId);
         }catch (Exception e){
             Toast.makeText(ShopDetailActivity.this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
         }
-        semdFcmNotifications(notificationJo,orderId);
+
     }
 
     private void semdFcmNotifications(JSONObject notificationJo, String orderId) {
-        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest("https://fcm:googleapis.com/fcm/send", notificationJo, new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest("https://fcm.googleapis.com/fcm/send", notificationJo, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 Intent intent=new Intent(ShopDetailActivity.this, OrderDetailActivity.class);
@@ -527,6 +570,10 @@ private AdapterProductUsers adapterProductUsers;
                 intent.putExtra("orderTo",shopUid);
                 intent.putExtra("orderId",orderId);
                 startActivity(intent);
+
+                Toast.makeText(ShopDetailActivity.this,""+ error.toString(),Toast.LENGTH_LONG).show();
+                Log.e("ERRO", error.getMessage());
+                Log.e("ERRO1", error.toString());
             }
         }){
 

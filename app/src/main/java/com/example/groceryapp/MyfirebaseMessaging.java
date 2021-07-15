@@ -70,6 +70,7 @@ public class MyfirebaseMessaging extends FirebaseMessagingService {
 
         int notificationID=new Random().nextInt(3000);
 
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O_MR1){
         setUpNotificationChannel(notificationManager);
 
         Intent intent = null;
@@ -109,6 +110,7 @@ public class MyfirebaseMessaging extends FirebaseMessagingService {
         notificationManager.notify(notificationID,builder.build());
 
     }
+    }
 
     private void setUpNotificationChannel(NotificationManager notificationManager) {
             CharSequence channelName="Some Sample Text";
@@ -119,8 +121,7 @@ public class MyfirebaseMessaging extends FirebaseMessagingService {
             channel.enableLights(true);
             channel.setLightColor(Color.RED);
             channel.enableVibration(true);
-            if(notificationManager!=null){
                 notificationManager.createNotificationChannel(channel);
-            }
+
     }
 }

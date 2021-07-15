@@ -235,10 +235,9 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         progressDialog.setMessage("Saving Acount Info...");
         progressDialog.show();
 
-        String timestamp = "" + System.currentTimeMillis();
+        String timestamp =""+System.currentTimeMillis();
         if (imageUri == null) {
             //save info with image
-
             //setdata to save
             HashMap<String, Object> hashMap = new HashMap<>();
             hashMap.put("uid", "" + firebaseAuth.getUid());
@@ -287,7 +286,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             //get url of upload image
                             Task<Uri> uriTask=taskSnapshot.getStorage().getDownloadUrl();
-                            while(!uriTask.isSuccessful()){
+                            while(!uriTask.isSuccessful());
                                 Uri dowloadImageUri=uriTask.getResult();
                                 if(uriTask.isSuccessful()){
                                     //setdata to save
@@ -327,7 +326,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
 
                                         }
                                     });
-                                }
+
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -427,13 +426,7 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
         }).show();
     }
     private void pickFromGallery(){
-//        Intent i = new Intent();
-//        i.setType("image/*");
-//        i.setAction(Intent.ACTION_GET_CONTENT);
-//
-//        // pass the constant to compare it
-//        // with the returned requestCode
-//        startActivityForResult(Intent.createChooser(i, "Select Picture"),200);
+
 
         Intent intent=new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
@@ -619,20 +612,6 @@ public class RegisterUserActivity extends AppCompatActivity implements LocationL
     @Override
     protected void onActivityResult(int requestCode, int resultCode,  Intent data) {
 
-//        if(requestCode==RESULT_OK){
-//            if(requestCode== IMAGE_PICK_GALLERY_CODE){
-//                Toast.makeText(this,"ok",Toast.LENGTH_LONG).show();
-//                //get picked image
-//                imageUri=data.getData();
-//                //ser to imageview
-//                profile.setImageURI(imageUri);
-//
-//
-//            }
-//            else if(requestCode==IMAGE_PICK_CAMERA_CODE){
-//                profile.setImageURI(imageUri);
-//            }
-//        }
         if(resultCode==RESULT_OK){
             if(requestCode==IMAGE_PICK_GALLERY_CODE){
 

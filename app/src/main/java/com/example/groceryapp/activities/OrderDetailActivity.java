@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class OrderDetailActivity extends AppCompatActivity {
-    private ImageButton btnBack;
+    private ImageButton btnBack,btnReview;
     private TextView TvOrderId,TvDate,TvOrderStatus,TvShopName,TvTotalItem,TvAmount,TvDeliveryAdress;
     private RecyclerView Rvitems;
     private String orderTo,orderId;
@@ -44,6 +44,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
         btnBack=findViewById(R.id.btnBack);
+        btnReview=findViewById(R.id.btnReview);
         TvOrderId=findViewById(R.id.TvOrderId);
         TvDate=findViewById(R.id.TvDate);
         TvOrderStatus=findViewById(R.id.TvOrderStatus);
@@ -67,6 +68,16 @@ public class OrderDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 onBackPressed();
+            }
+        });
+
+        //review
+        btnReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent1=new Intent(OrderDetailActivity.this,WriteReviewActivity.class);
+                intent1.putExtra("shopUid",orderTo);
+                startActivity(intent1);
             }
         });
 

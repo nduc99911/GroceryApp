@@ -37,6 +37,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ import java.util.HashMap;
 public class MainSellerActivity extends AppCompatActivity {
 private TextView tvName,tvShopName,tvEmail,tabProduct,tabOrders,tvFilterProduct,TvFilterOrder;
 private ImageButton btnLogout,btnedit,btnaddProduct,btnFilterproduct,BtnFilterOrder,btnSetting;
-private ImageView imageView;
+private ImageView profileIv;
 private RelativeLayout RlProduct,RlOrders;
 private EditText edFilterProduct;
 private FirebaseAuth firebaseAuth;
@@ -72,7 +73,7 @@ private AdapterProductSeller adapterProductSeller;
         btnFilterproduct=findViewById(R.id.Btnfilterproduct);
         btnSetting=findViewById(R.id.btnSetting);
         BtnFilterOrder=findViewById(R.id.BtnFilterOrder);
-        imageView=findViewById(R.id.profileIv);
+        profileIv=findViewById(R.id.profileIv);
         RlProduct=findViewById(R.id.RlProduct);
         RlOrders=findViewById(R.id.RlOrders);
         RvOrder=findViewById(R.id.RvOrder);
@@ -374,9 +375,18 @@ private AdapterProductSeller adapterProductSeller;
                             String accountType=""+s.child("accountType").getValue();
                             String email=""+s.child("email").getValue();
                             String shopName=""+s.child("shopName").getValue();
+                            String profile=""+s.child("profileImage").getValue();
                             tvName.setText(name+"("+accountType+")");
                             tvShopName.setText(shopName);
                             tvEmail.setText(email);
+
+
+                            try {
+                                Picasso.get().load(profile).placeholder(R.drawable.ic_baseline_person_pin_24).into(profileIv);
+                            }
+                            catch (Exception e){
+                                profileIv.setImageResource(R.drawable.ic_baseline_person_pin_24);
+                            }
 
 
                         }

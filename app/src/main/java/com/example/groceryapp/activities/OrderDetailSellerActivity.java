@@ -13,12 +13,14 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -35,6 +37,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONObject;
 
@@ -77,6 +80,7 @@ private AdapterOderItem adapterOderItem;
         orderBy=getIntent().getStringExtra("orderBy");
 
         firebaseAuth=FirebaseAuth.getInstance();
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
         loadMyInfo();
         loadBuyerInfo();
         loadOrderDetail();
@@ -131,7 +135,9 @@ private AdapterOderItem adapterOderItem;
                         String message="Order is now"+selected;
                         Toast.makeText(OrderDetailSellerActivity.this,message,Toast.LENGTH_LONG).show();
 
+
                         prepareNotificationMesseage(orderId,message);
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -304,14 +310,16 @@ private AdapterOderItem adapterOderItem;
 
             notificationJo.put("to",NOTIFICATION_TOPIC);
             notificationJo.put("data",notificationBodyJo);
+
+            semdFcmNotifications(notificationJo);
         }catch (Exception e){
             Toast.makeText(this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
         }
-        semdFcmNotifications(notificationJo);
+
     }
 
     private void semdFcmNotifications(JSONObject notificationJo) {
-        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest("https://fcm:googleapis.com/fcm/send", notificationJo, new Response.Listener<JSONObject>() {
+        JsonObjectRequest jsonObjectRequest=new JsonObjectRequest("https://fcm.googleapis.com/fcm/send", notificationJo, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
@@ -319,6 +327,9 @@ private AdapterOderItem adapterOderItem;
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(OrderDetailSellerActivity.this,""+ error.toString(),Toast.LENGTH_LONG).show();
+                Log.e("ERRO", error.getMessage());
+                Log.e("ERRO1", error.toString());
 
             }
         }){
@@ -333,5 +344,43 @@ private AdapterOderItem adapterOderItem;
             }
         };
         Volley.newRequestQueue(this).add(jsonObjectRequest);
+    }
+    private void sen(){
+        JSONObject jsonObject=new JSONObject();
+        try {
+            jsonObject.put("to","/topics/"+"news");
+            JSONObject jsonObject1=new JSONObject();
+            jsonObject1.put("title","any title");
+            jsonObject1.put("body","any body");
+            jsonObject.put("notification",jsonObject1);
+
+            JsonObjectRequest request=new JsonObjectRequest(Request.Method.POST, "https://fcm.googleapis.com/fcm/send", jsonObject,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }
+            ){
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers=new HashMap<>();
+                    headers.put("content-type","application/json");
+                    headers.put("authorization","key=AAAAcxQCwk8:APA91bGHiVS2FzvRgJRX2jYeN4EjOkdEOzYDF3oyumaJxS_Am7cHOjUOGYgzL3G-N0O3KRRLqiD4ChvZLAQwweXNhSUHSGP2v9oGkqseWGWPgo2mA5z7YR7s_7DjkiZruKqJWHXUEYZV");
+
+                    return headers;
+                }
+            };
+            Volley.newRequestQueue(this).add(request);
+        }
+        catch (Exception e){
+
+        }
+
     }
 }

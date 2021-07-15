@@ -142,7 +142,8 @@ private ProgressDialog progressDialog;
                     public void onDataChange( DataSnapshot snapshot) {
                         for(DataSnapshot s:snapshot.getChildren()){
                             String accountType=""+s.child("accountType").getValue();
-                            if(accountType.equals("Seller")){
+                            String accountType1=accountType.trim();
+                            if(accountType1.equals("Seller")){
                                 progressDialog.dismiss();
                                 Intent intent=new Intent(LoginActivity.this, MainSellerActivity.class);
                                 startActivity(intent);

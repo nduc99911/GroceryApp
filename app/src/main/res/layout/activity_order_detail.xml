@@ -30,6 +30,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
         </TextView>
+
+        <ImageButton
+            android:id="@+id/btnReview"
+            android:background="@null"
+            android:src="@drawable/ic_baseline_rate_review_24"
+            android:layout_width="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_height="30dp">
+
+        </ImageButton>
+
     </RelativeLayout>
 
     <androidx.cardview.widget.CardView

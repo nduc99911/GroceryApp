@@ -288,7 +288,7 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     //get url of upload image
                     Task<Uri> uriTask=taskSnapshot.getStorage().getDownloadUrl();
-                    while(!uriTask.isSuccessful()){
+                    while(!uriTask.isSuccessful());
                         Uri uri=uriTask.getResult();
                         if(uriTask.isSuccessful()){
                             //setdata to save
@@ -312,7 +312,7 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
                             hashMap.put("profileImage", ""+uri);//url of uploades image
                             //save to db
                             DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users");
-                            reference.child(firebaseAuth.getUid()).child(timestamp).setValue(hashMap)
+                            reference.child(firebaseAuth.getUid()).setValue(hashMap)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
@@ -335,7 +335,7 @@ public class ResgisterSellerActivity extends AppCompatActivity implements Locati
                             });
                         }
                     }
-                }
+
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure( Exception e) {

@@ -16,6 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.groceryapp.Model.ModelShop;
 import com.example.groceryapp.R;
 import com.example.groceryapp.activities.ShopDetailActivity;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -57,6 +62,7 @@ public ArrayList<ModelShop> listShop;
         String shopName=modelShop.getShopName();
         String profileImage=modelShop.getProfileImage();
 
+        loadReviews(modelShop,holder);
         //set data
         holder.tvShopName.setText(shopName);
         holder.tvPhone.setText(phone);
@@ -93,6 +99,31 @@ public ArrayList<ModelShop> listShop;
         });
 
 
+    }
+    private float ratingSum=0;
+    private void loadReviews(ModelShop modelShop, HolderShop holder) {
+
+        String shopUid=modelShop.getUid();
+
+        DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Users");
+        reference.child(shopUid).child("Ratings")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange( DataSnapshot snapshot) {
+                        ratingSum=0;
+                        for(DataSnapshot s:snapshot.getChildren()){
+                            float rating=Float.parseFloat(""+s.child("ratings").getValue());
+                            ratingSum=ratingSum+rating;
+                        }
+                        long numberofReviews=snapshot.getChildrenCount();
+                        float avgratings=ratingSum/numberofReviews;
+
+                        holder.RatingBar.setRating(avgratings);
+                    }
+                    @Override
+                    public void onCancelled( DatabaseError error) {
+                    }
+                });
     }
 
     @Override
